@@ -1,6 +1,7 @@
 import { env } from '@/config'
-import { expressHttpServer } from './express/express-htttp-client'
+import { expressHttpServer } from '@/main/infra/express/express-htttp-client'
 import { pinoLoggerLocal as loggerLocal } from '@/main/infra/logs'
+import { prismaConnector } from '@/main/infra/prisma/prisma-connector'
 
 const exitStatus = {
   Failure: 1,
@@ -25,6 +26,9 @@ process.on('uncaughtException', (error) => {
 
 async function main() {
   try {
+    prismaConnector.connect()
+    loggerLocal.logInfo(`Prisma connect with success to ${env.DATABASE_URL}`)
+
     expressHttpServer.listen(env.PORT, () =>
       loggerLocal.logInfo(`Server runing at http://localhost:${env.PORT}`),
     )

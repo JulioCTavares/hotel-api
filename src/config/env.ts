@@ -8,6 +8,10 @@ const envSchema = z.object({
   FRONT_STAGE_URL: z.string(),
   STAGE_DEPLOY_URL: z.string(),
   PROD_DEPLOY_URL: z.string(),
+  DATABASE_URL: z.string(),
+  DATABASE_USERNAME: z.string(),
+  DATABASE_PASSWORD: z.string(),
+  DATABASE_PORT: z.coerce.number(),
 })
 
 const _env = envSchema.safeParse(process.env)
