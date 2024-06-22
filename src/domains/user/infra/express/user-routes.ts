@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   makeHttpCreateUserController,
+  makeHttpDeleteUserByIdController,
   makeHttpGetUserByIdController,
   makeHttpGetUsersByFilterController,
 } from '@/domains/user/factories'
@@ -14,6 +15,9 @@ userRouter
   .post(adaptRoute(makeHttpCreateUserController()))
   .get(adaptRoute(makeHttpGetUsersByFilterController()))
 
-userRouter.route('/users/:id').get(adaptRoute(makeHttpGetUserByIdController()))
+userRouter
+  .route('/users/:id')
+  .get(adaptRoute(makeHttpGetUserByIdController()))
+  .delete(adaptRoute(makeHttpDeleteUserByIdController()))
 
 export { userRouter }
