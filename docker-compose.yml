@@ -1,0 +1,23 @@
+services:
+  hotel_db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    hostname: hotel-db
+    restart: unless-stopped
+    ports:
+     - '${DATABASE_PORT:?DATABASE_PORT env var is missing on .env file}:${DATABASE_PORT}'
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD env var is missing on .env file}
+      MSSQL_PID: "Developer"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - sqlserver-network
+
+networks:
+  sqlserver-network:
+    driver: bridge
+
+volumes:
+  sqlserver-data:
+    driver: local
