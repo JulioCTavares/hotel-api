@@ -46,7 +46,7 @@ const propertysInQueryToConvert = {
 export const convertProperties = (obj: any): any =>
   Object.fromEntries(
     Object.entries(obj)
-      .filter(([key, value]) => value !== undefined)
+      .filter(([_key, value]) => value !== undefined)
       .map(([key, value]) => {
         // @ts-expect-error
         if (propertysInQueryToConvert[key])

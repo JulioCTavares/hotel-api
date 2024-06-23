@@ -20,7 +20,7 @@ USER node
 WORKDIR /home/node
 
 COPY --chown=node:node src/main/infra/prisma/schema.prisma ./prisma/
-COPY --chown=node:node package*.json tsconfig.json .swcrc ./
+COPY --chown=node:node package*.json tsconfig.json tsconfig-build.json .swcrc ./
 COPY --chown=node:node src src/
 
 RUN npm install --legacy-peer-deps
@@ -41,4 +41,4 @@ COPY --chown=node:node src/main/infra/prisma/migrations ./migrations
 COPY --chown=node:node src/main/infra/prisma/schema.prisma ./
 COPY --chown=node:node package.json ./
 
-CMD ["node",  "dist/src/main/infra/server.js"]
+CMD ["node",  "dist/main/infra/server.js"]

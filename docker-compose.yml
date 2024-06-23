@@ -4,7 +4,7 @@ services:
     hostname: hotel-db
     restart: unless-stopped
     ports:
-     - '${DATABASE_PORT:?DATABASE_PORT env var is missing on .env file}:${DATABASE_PORT}'
+      - '${DATABASE_PORT:?DATABASE_PORT env var is missing on .env file}:${DATABASE_PORT}'
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD env var is missing on .env file}
@@ -13,6 +13,21 @@ services:
       - sqlserver-data:/var/opt/mssql
     networks:
       - sqlserver-network
+
+  hotel_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: hotel-api
+    restart: unless-stopped
+    ports:
+      - '${API_PORT:?API_PORT env var is missing on .env file}:${API_PORT}'
+    env_file:
+      - .env
+    volumes:
+      - ./src:/home/node/src
+    depends_on:
+      - hotel_db
 
 networks:
   sqlserver-network:

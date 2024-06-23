@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 
 export const noCache = (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): void => {

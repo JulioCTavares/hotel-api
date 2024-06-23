@@ -6,7 +6,7 @@ export class PrismaFormatter {
     const filterdByDate = ['createdAt', 'updatedAt', 'birthDate']
 
     const filterWithouUndefined = filterEntries.filter(
-      ([key, value]) => value !== undefined,
+      ([_key, value]) => value !== undefined,
     )
 
     const filterEntriesTransformed = filterWithouUndefined.map(
@@ -50,7 +50,7 @@ export class PrismaFormatter {
     )
 
     const filterEntriesTransformedWithouNulls = filterEntriesTransformed.filter(
-      ([key, value]) => value !== undefined || value !== null,
+      ([_key, value]) => value !== undefined || value !== null,
     )
 
     const filterObjectFormated = Object.fromEntries(
@@ -64,11 +64,11 @@ export class PrismaFormatter {
     take: number | undefined
     skip: number | undefined
     orderBy:
-      | {
-          property: string
-          mode: 'asc' | 'desc'
-        }
-      | undefined
+    | {
+      property: string
+      mode: 'asc' | 'desc'
+    }
+    | undefined
   }) {
     const { take, skip, orderBy } = findOptions
 

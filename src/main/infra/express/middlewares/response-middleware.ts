@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 export const responseMiddleware = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ) => {

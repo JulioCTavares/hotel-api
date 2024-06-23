@@ -74,7 +74,7 @@ export class SwaggerTypes {
     }
   }
 
-  static array(required: required = false, type: any, maxItems: number) {
+  static array(_required: required = false, type: any, maxItems: number) {
     return {
       type: 'array',
       items: {
@@ -84,7 +84,7 @@ export class SwaggerTypes {
     }
   }
 
-  static object(required: required = false, properties: any) {
+  static object(_required: required = false, properties: any) {
     return {
       type: 'object',
       properties: Object.fromEntries(properties),

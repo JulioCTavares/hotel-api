@@ -1,12 +1,12 @@
-import { DefaultException } from '@/shared/helpers'
+import { DefaultException, ExceptionTypes } from '@/shared/helpers'
 import { NextFunction, Request, Response } from 'express'
 import { ZodError } from 'zod'
 
 export const errorMiddleware = async (
   error: any,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ): Promise<void> => {
   const status = error?.statusCode || 500
 
@@ -42,10 +42,6 @@ export const errorMiddleware = async (
     })
 
     return
-  }
-
-  if (status === 500) {
-    sentryLoggerCloud.logError(error)
   }
 
   res.status(status).json({

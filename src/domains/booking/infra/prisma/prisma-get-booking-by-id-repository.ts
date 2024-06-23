@@ -3,6 +3,7 @@ import { IGetBookingByIdRepository } from '@/domains/booking/usecases/repos'
 import { PrismaException } from '@/shared/infra/prisma'
 import { prismaConnector } from '@/main/infra/prisma'
 import { PrismaBookingMapper } from './mappers/prisma-booking-mapper'
+import { PrismaClient } from '@prisma/client'
 
 export class PrismaGetBookingByIdRepository
   implements IGetBookingByIdRepository {

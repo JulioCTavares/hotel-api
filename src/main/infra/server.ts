@@ -1,3 +1,5 @@
+import 'module-alias/register'
+
 import { env } from '@/config'
 import { expressHttpServer } from '@/main/infra/express/express-htttp-client'
 import { pinoLoggerLocal as loggerLocal } from '@/main/infra/logs'

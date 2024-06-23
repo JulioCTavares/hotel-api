@@ -1,13 +1,14 @@
 {
   "name": "estudos",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/main/infra/server.js",
   "scripts": {
     "dev": "tsx watch src/main/infra/server.ts",
-    "build": "swc src -d dist",
-    "start": "node dist/main/infra/server.js",
+    "build": "tsc -p tsconfig-build.json",
+    "start": "node ./",
     "prisma:migration": "npx prisma migrate dev --schema=./src/main/infra/prisma/schema.prisma",
     "prisma:studio": "npx prisma studio --schema=./src/main/infra/prisma/schema.prisma",
+    "prisma:generate": "npx prisma generate --schema=./src/main/infra/prisma/schema.prisma",
     "plop": "plop",
     "lint:fix": "eslint 'src/**' --fix"
   },
@@ -27,7 +28,6 @@
     "eslint": "^8.57.0",
     "pino-pretty": "^11.2.1",
     "plop": "^4.0.1",
-    "swagger-ui-express": "^5.0.1",
     "tsup": "^8.1.0",
     "tsx": "^4.15.7",
     "typescript": "^5.5.2"
@@ -41,9 +41,14 @@
     "express-async-errors": "^3.1.1",
     "express-rate-limit": "^7.3.1",
     "helmet": "^7.1.0",
+    "module-alias": "^2.2.3",
     "pino": "^9.2.0",
     "pino-http": "^10.1.0",
     "prisma": "^5.15.1",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   }
 }

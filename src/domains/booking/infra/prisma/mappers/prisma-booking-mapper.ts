@@ -12,6 +12,7 @@ export class PrismaBookingMapper {
       startDate: bookingDTO.startDate,
       endDate: bookingDTO.endDate,
       status: bookingDTO.status as BookingStatus,
+      userId: bookingDTO.userId,
       createdAt: bookingDTO.createdAt,
       updatedAt: bookingDTO.updatedAt,
     })
