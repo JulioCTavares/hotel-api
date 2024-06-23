@@ -22,7 +22,7 @@ export const bookingSchema = SwaggerSchemas.create('Booking', [
   ['startDate', SwaggerTypes.string(true)],
   ['endDate', SwaggerTypes.string(true)],
   ['userId', SwaggerTypes.uuid(true)],
-  ['status', SwaggerTypes.enum(true, bookingStatus)],
+  ['status', SwaggerTypes.enum(bookingStatus, true)],
   ['created_at', SwaggerTypes.dateTime(true)],
   ['updated_at', SwaggerTypes.dateTime(true)],
 ])
@@ -35,7 +35,7 @@ export const bookingObject = SwaggerTypes.object(true, [
   ['startDate', SwaggerTypes.string(true)],
   ['endDate', SwaggerTypes.string(true)],
   ['userId', SwaggerTypes.uuid(true)],
-  ['status', SwaggerTypes.enum(true, bookingStatus)],
+  ['status', SwaggerTypes.enum(bookingStatus, true)],
   ['created_at', SwaggerTypes.dateTime(true)],
   ['updated_at', SwaggerTypes.dateTime(true)],
 ])
@@ -48,13 +48,13 @@ export const bookingPaths = {
       produces: ['application/json'],
       parameters: [
         ...SwaggerQuery.params([
-          ['roomNumber', SwaggerTypes.integer(true)],
-          ['bookingAmount', SwaggerTypes.integer(true)],
-          ['bookingDate', SwaggerTypes.string(true)],
-          ['startDate', SwaggerTypes.string(true)],
-          ['endDate', SwaggerTypes.string(true)],
-          ['userId', SwaggerTypes.uuid(true)],
-          ['status', SwaggerTypes.enum(true, bookingStatus)],
+          ['roomNumber', SwaggerTypes.integer()],
+          ['bookingAmount', SwaggerTypes.integer()],
+          ['bookingDate', SwaggerTypes.string()],
+          ['startDate', SwaggerTypes.string()],
+          ['endDate', SwaggerTypes.string()],
+          ['userId', SwaggerTypes.uuid()],
+          ['status', SwaggerTypes.enum(bookingStatus)],
         ]),
         ...defaultFilterParams,
       ],
@@ -89,7 +89,7 @@ export const bookingPaths = {
             ['startDate', SwaggerTypes.string(true)],
             ['endDate', SwaggerTypes.string(true)],
             ['userId', SwaggerTypes.uuid(true)],
-            ['status', SwaggerTypes.enum(true, bookingStatus)],
+            ['status', SwaggerTypes.enum(bookingStatus, true)],
           ]),
         ),
         ...defaultResponses,
@@ -118,7 +118,13 @@ export const bookingPaths = {
       parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
       requestBody: {
         content: SwaggerContents.applicationJson([
-          ['name', SwaggerTypes.string()],
+          ['roomNumber', SwaggerTypes.integer()],
+          ['bookingAmount', SwaggerTypes.integer()],
+          ['bookingDate', SwaggerTypes.string()],
+          ['startDate', SwaggerTypes.string()],
+          ['endDate', SwaggerTypes.string()],
+          ['userId', SwaggerTypes.uuid()],
+          ['status', SwaggerTypes.enum(bookingStatus)],
         ]),
       },
       responses: {

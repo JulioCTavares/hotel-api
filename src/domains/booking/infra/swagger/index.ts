@@ -1,1 +1,1 @@
-export * from './booking-paths';
+export * from './booking-paths'

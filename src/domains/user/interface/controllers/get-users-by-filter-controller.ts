@@ -37,10 +37,10 @@ export interface GetUsersByFilterRequest {
 
 export type GetUsersByFilterResponse =
   | {
-    items: UserDefaultPresenter[]
-    totalItemsListed: number
-    totalItems: number
-  }
+      items: UserDefaultPresenter[]
+      totalItemsListed: number
+      totalItems: number
+    }
   | { totalItems: number }
 
 export class GetUsersByFilterController {

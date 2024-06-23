@@ -6,7 +6,8 @@ import { PrismaBookingMapper } from './mappers/prisma-booking-mapper'
 import { PrismaClient } from '@prisma/client'
 
 export class PrismaGetBookingsByFilterRepository
-  implements IGetBookingsByFilterRepository {
+  implements IGetBookingsByFilterRepository
+{
   private prismaConnection: PrismaClient
 
   constructor() {

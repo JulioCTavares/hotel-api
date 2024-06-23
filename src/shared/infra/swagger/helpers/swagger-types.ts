@@ -18,7 +18,7 @@ export class SwaggerTypes {
     }
   }
 
-  static enum(required: required = false, possibleValues: string[]) {
+  static enum(possibleValues: string[], required: boolean = false) {
     return {
       type: 'string',
       required,

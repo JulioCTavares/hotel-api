@@ -40,10 +40,10 @@ export interface GetBookingsByFilterRequest {
 
 export type GetBookingsByFilterResponse =
   | {
-    items: BookingDefaultPresenter[]
-    totalItemsListed: number
-    totalItems: number
-  }
+      items: BookingDefaultPresenter[]
+      totalItemsListed: number
+      totalItems: number
+    }
   | { totalItems: number }
 
 export class GetBookingsByFilterController {
