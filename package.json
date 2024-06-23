@@ -2,11 +2,10 @@
   "name": "estudos",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "dev": "tsx watch src/main/infra/server.ts",
-    "build": "tsup src --out-dir build",
-    "start": "node build/server.js",
+    "build": "swc src -d dist",
+    "start": "node dist/main/infra/server.js",
     "prisma:migration": "npx prisma migrate dev --schema=./src/main/infra/prisma/schema.prisma",
     "prisma:studio": "npx prisma studio --schema=./src/main/infra/prisma/schema.prisma"
   },
