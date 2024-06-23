@@ -18,6 +18,14 @@ export class SwaggerTypes {
     }
   }
 
+  static enum(required: required = false, possibleValues: string[]) {
+    return {
+      type: 'string',
+      required,
+      enum: possibleValues,
+    }
+  }
+
   static uuid(
     required: required = false,
     example: string = 'b2b7dcd6-6032-4973-b49e-8926535bcfb4',
