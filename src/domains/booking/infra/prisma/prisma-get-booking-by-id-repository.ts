@@ -1,14 +1,11 @@
-import { Booking as BookingModel, PrismaClient } from '@prisma/client'
-
 import { IGetBookingByIdRepository } from '@/domains/booking/usecases/repos'
-import { Booking } from '@/domains/booking/entities'
 
-import { convertNullToUndefined } from '@/shared/helpers'
-import { prismaConnector, PrismaException } from '@/shared/infra/prisma'
+import { PrismaException } from '@/shared/infra/prisma'
+import { prismaConnector } from '@/main/infra/prisma'
+import { PrismaBookingMapper } from './mappers/prisma-booking-mapper'
 
 export class PrismaGetBookingByIdRepository
-  implements IGetBookingByIdRepository
-{
+  implements IGetBookingByIdRepository {
   private prismaConnection: PrismaClient
 
   constructor() {
@@ -19,19 +16,15 @@ export class PrismaGetBookingByIdRepository
     id: IGetBookingByIdRepository.Params,
   ): Promise<IGetBookingByIdRepository.Result> {
     try {
-      const bookingDTO = await this.prismaConnection.booking.findFirst({
-        where: { id, enabled: true },
+      const booking = await this.prismaConnection.booking.findFirst({
+        where: { id },
       })
 
-      if (!bookingDTO) {
+      if (!booking) {
         return null
       }
 
-      const booking = new Booking(
-        convertNullToUndefined<BookingModel>(bookingDTO),
-      )
-
-      return booking
+      return PrismaBookingMapper.toDomain(booking)
     } catch (error) {
       throw new PrismaException(error)
     }

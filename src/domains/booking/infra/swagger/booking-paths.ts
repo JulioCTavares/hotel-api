@@ -76,21 +76,19 @@ export const bookingPaths = {
       produces: ['application/json'],
       requestBody: {
         content: SwaggerContents.applicationJson([
-          ['name', SwaggerTypes.string(true)],
+          ['roomNumber', SwaggerTypes.integer(true)],
+          ['bookingAmount', SwaggerTypes.integer(true)],
+          ['bookingDate', SwaggerTypes.string(true)],
+          ['startDate', SwaggerTypes.string(true)],
+          ['endDate', SwaggerTypes.string(true)],
+          ['userId', SwaggerTypes.uuid(true)],
+          ['status', SwaggerTypes.enum(bookingStatus, true)],
         ]),
       },
       responses: {
         ...SwaggerResponse.created(
           'Booking created',
-          SwaggerContents.applicationJson([
-            ['roomNumber', SwaggerTypes.integer(true)],
-            ['bookingAmount', SwaggerTypes.integer(true)],
-            ['bookingDate', SwaggerTypes.string(true)],
-            ['startDate', SwaggerTypes.string(true)],
-            ['endDate', SwaggerTypes.string(true)],
-            ['userId', SwaggerTypes.uuid(true)],
-            ['status', SwaggerTypes.enum(bookingStatus, true)],
-          ]),
+          SwaggerContents.applicationJson([]),
         ),
         ...defaultResponses,
       },

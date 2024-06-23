@@ -1,11 +1,17 @@
+import {
+  bookingPaths,
+  bookingSchema,
+  bookingTag,
+} from '@/domains/booking/infra/swagger'
 import { userPaths, userTag, userSchema } from '@/domains/user/infra/swagger'
 import { errorSchema, servers } from '@/shared/infra/swagger/helpers'
 
-const tags = [userTag]
+const tags = [userTag, bookingTag]
 
 const schemas = {
   ...errorSchema,
   ...userSchema,
+  ...bookingSchema,
 }
 
 export default {
@@ -22,6 +28,7 @@ export default {
   tags,
   paths: {
     ...userPaths,
+    ...bookingPaths,
   },
   components: {
     schemas,

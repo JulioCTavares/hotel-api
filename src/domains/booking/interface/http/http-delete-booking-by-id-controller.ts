@@ -13,7 +13,6 @@ import {
   serverError,
 } from '@/shared/interface/http/helpers'
 import { ILoggerLocal } from '@/shared/protocols'
-import { Validation } from '@/shared/interface/validation/protocols'
 import { ValidationException } from '@/shared/helpers'
 
 export interface HttpDeleteBookingByIdRequest {
@@ -27,13 +26,11 @@ export class HttpDeleteBookingByIdController implements HttpController {
   constructor(
     getBookingByIdRepository: IGetBookingByIdRepository,
     deleteBookingByIdRepository: IDeleteBookingByIdRepository,
-    validation: Validation,
     logger: ILoggerLocal,
   ) {
     this.controller = new DeleteBookingByIdController(
       getBookingByIdRepository,
       deleteBookingByIdRepository,
-      validation,
       logger,
     )
 
