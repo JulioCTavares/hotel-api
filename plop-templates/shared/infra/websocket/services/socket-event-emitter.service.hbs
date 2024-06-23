@@ -1,0 +1,25 @@
+import { Server } from 'socket.io';
+
+import { IEventEmitterService } from '@/shared/interface/websocket/services';
+
+import { socketInstance, SocketException } from '@/main/infra/websocket';
+
+export class SocketEventEmitterService implements IEventEmitterService {
+  private socketClient: Server
+
+  constructor() {
+    this.socketClient = socketInstance.getClient();
+  }
+
+  async emit(
+    params: IEventEmitterService.Params,
+  ): Promise<IEventEmitterService.Result> {
+    try {
+      const { name, data } = params;
+
+      this.socketClient.emit(name, data);
+    } catch (error) {
+      throw new SocketException(error);
+    }
+  }
+}

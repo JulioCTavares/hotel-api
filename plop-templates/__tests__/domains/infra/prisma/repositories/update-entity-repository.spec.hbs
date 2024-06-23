@@ -1,0 +1,61 @@
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+import { PrismaUpdate{{pascalCase name}}Repository } from '@/domains/{{dashCase name}}/infra/prisma/repositories';
+import { prismaConnector } from '@/shared/infra/prisma/index';
+
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+import { PrismaClient } from '@prisma/client';
+
+const makeSut = () => {
+  const sut = new PrismaUpdate{{pascalCase name}}Repository();
+
+  return {
+    sut,
+  };
+}
+
+describe('Prisma Update {{pascalCase name}} Repository', () => {
+  let prismaTest: PrismaClient | null = null;
+  beforeAll(async () => {
+    prismaTest = prismaConnector.connect(process.env.DATABASE_TEST_URL);
+
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterEach(async () => {
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterAll(async () => {
+    if (prismaTest) {
+      await prismaTest.$disconnect();
+    }
+  });
+
+  test('Should update a {{camelCase name}}', async () => {
+    const { sut } = makeSut();
+
+    const fake{{pascalCase name}} = {{pascalCase name}}Factory.build({ enabled: true });
+
+    const paramsToUpdate = {{pascalCase name}}Factory.build({ enabled: true });
+
+    await prismaTest?.{{camelCase name}}.create({ data: fake{{pascalCase name}} });
+
+    const {{camelCase name}}Updated = await sut.update({
+      ...paramsToUpdate,
+      id: fake{{pascalCase name}}.id,
+    });
+
+    const expectedResult = new {{pascalCase name}}({
+      ...fake{{pascalCase name}},
+      ...paramsToUpdate,
+      id: {{camelCase name}}Updated.id,
+      updatedAt: {{camelCase name}}Updated.updatedAt,
+    });
+
+    expect({{camelCase name}}Updated).toStrictEqual(expectedResult);
+  });
+});

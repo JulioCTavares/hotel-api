@@ -1,0 +1,94 @@
+import {
+  IUpdate{{pascalCase name}}Repository,
+  IGet{{pascalCase name}}ByIdRepository,
+  IGet{{pascalCase name}}ByNameRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+import {
+  {{pascalCase name}}NotFoundException,
+  {{pascalCase name}}AlreadyExistsException,
+} from '@/domains/{{dashCase name}}/usecases/exceptions';
+import {
+  Update{{pascalCase name}}ByIdController,
+} from '@/domains/{{dashCase name}}/interface/controllers';
+
+import {
+  ok,
+  notFound,
+  badRequest,
+  serverError,
+} from '@/shared/interface/http/helpers';
+import {
+  HttpResponse,
+  HttpController,
+} from '@/shared/interface/http/protocols';
+import { ILoggerLocal } from '@/shared/protocols';
+import { ValidationException } from '@/shared/helpers';
+import { Validation } from '@/shared/interface/validation/protocols';
+
+export interface HttpUpdate{{pascalCase name}}ByIdRequest {
+  id: string;
+  name?: string;
+}
+
+export class HttpUpdate{{pascalCase name}}ByIdController implements HttpController {
+  private controller: Update{{pascalCase name}}ByIdController;
+  private logger: ILoggerLocal;
+
+  constructor(
+    get{{pascalCase name}}ByIdRepository: IGet{{pascalCase name}}ByIdRepository,
+    get{{pascalCase name}}ByNameRepository: IGet{{pascalCase name}}ByNameRepository,
+    update{{pascalCase name}}Repository: IUpdate{{pascalCase name}}Repository,
+    validation: Validation,
+    logger: ILoggerLocal,
+  ) {
+    this.controller = new Update{{pascalCase name}}ByIdController(
+      get{{pascalCase name}}ByIdRepository,
+      get{{pascalCase name}}ByNameRepository,
+      update{{pascalCase name}}Repository,
+      validation,
+      logger,
+    );
+
+    this.logger = logger.child({ httpController: 'update-{{dashCase name}}-by-id' });
+  }
+
+  async handle(
+    httpRequest: HttpUpdate{{pascalCase name}}ByIdRequest
+  ): Promise<HttpResponse> {
+    this.logger.logDebug({ message: 'Request Received', data: httpRequest });
+
+    const { id, name } = httpRequest;
+
+    const request = {
+      id,
+      paramsToUpdate: {
+        name,
+      },
+    };
+
+    try {
+      const {{camelCase name}}Updated = await this.controller.execute(request);
+
+      this.logger.logDebug({
+        message: '{{pascalCase name}} updated',
+        data: {{camelCase name}}Updated,
+      });
+
+      return ok({{camelCase name}}Updated);
+    } catch (error) {
+      if (error instanceof ValidationException) {
+        return badRequest(error);
+      }
+
+      if (error instanceof {{pascalCase name}}AlreadyExistsException) {
+        return badRequest(error);
+      }
+
+      if (error instanceof {{pascalCase name}}NotFoundException) {
+        return notFound(error);
+      }
+
+      return serverError(error as Error);
+    }
+  }
+}

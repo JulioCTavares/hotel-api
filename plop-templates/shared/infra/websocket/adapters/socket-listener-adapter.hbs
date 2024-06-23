@@ -1,0 +1,9 @@
+import { EventListener } from '@/shared/interface/websocket/protocols';
+
+export const adaptListener = (listener: EventListener) => {
+  const listenerAdapter = async (props: any) => {
+    await listener.perform(props);
+  }
+
+  return listenerAdapter;
+}

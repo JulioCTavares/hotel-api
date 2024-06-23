@@ -1,0 +1,27 @@
+import {
+  PrismaGet{{pascalCase name}}sByFilterRepository,
+  PrismaCount{{pascalCase name}}sByFilterRepository,
+} from '@/domains/{{dashCase name}}/infra/prisma/repositories';
+import {
+  makeGet{{pascalCase name}}sByFilterValidation,
+} from '@/domains/{{dashCase name}}/interface/validation';
+import {
+  HttpGet{{pascalCase name}}sByFilterController,
+} from '@/domains/{{dashCase name}}/interface/http';
+
+import { pinoLoggerLocal } from '@/shared/infra/logs';
+
+export const makeHttpGet{{pascalCase name}}sByFilterController =
+  (): HttpGet{{pascalCase name}}sByFilterController => {
+    const get{{pascalCase name}}sByFilterRepository = new PrismaGet{{pascalCase name}}sByFilterRepository();
+    const count{{pascalCase name}}sByFilterRepository = new PrismaCount{{pascalCase name}}sByFilterRepository();
+    const validation = makeGet{{pascalCase name}}sByFilterValidation();
+    const logger = pinoLoggerLocal;
+
+    return new HttpGet{{pascalCase name}}sByFilterController(
+      get{{pascalCase name}}sByFilterRepository,
+      count{{pascalCase name}}sByFilterRepository,
+      validation,
+      logger,
+    );
+  };

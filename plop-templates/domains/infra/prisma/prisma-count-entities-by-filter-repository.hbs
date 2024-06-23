@@ -1,0 +1,38 @@
+import { PrismaClient } from '@prisma/client';
+
+import { ICount{{pascalCase name}}sByFilterRepository } from '@/domains/{{dashCase name}}/usecases/repos';
+
+import {
+  prismaConnector,
+  PrismaFormatter,
+  PrismaException,
+} from '@/shared/infra/prisma';
+
+export class PrismaCount{{pascalCase name}}sByFilterRepository
+  implements ICount{{pascalCase name}}sByFilterRepository
+{
+  private prismaConnection: PrismaClient;
+
+  constructor() {
+    this.prismaConnection = prismaConnector.connect();
+  }
+
+  async count(
+    filters: ICount{{pascalCase name}}sByFilterRepository.Params,
+  ): Promise<ICount{{pascalCase name}}sByFilterRepository.Result> {
+    try {
+      const filtersFormated = PrismaFormatter.formatFilter(filters);
+
+      const total{{pascalCase name}}s = await this.prismaConnection.{{camelCase name}}.count({
+        where: {
+          ...filtersFormated,
+          enabled: filters.enabled ?? true,
+        },
+      });
+
+      return total{{pascalCase name}}s;
+    } catch (error) {
+      throw new PrismaException(error);
+    }
+  }
+}

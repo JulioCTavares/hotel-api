@@ -1,0 +1,25 @@
+import {
+  make{{pascalCase feature}}Validation,
+} from '@/domains/{{dashCase entity}}/interface/validation';
+import {
+  Prisma{{pascalCase feature}}Repository,
+} from '@/domains/{{dashCase entity}}/infra/prisma/repositories';
+import {
+  Http{{pascalCase feature}}Controller,
+} from '@/domains/{{dashCase entity}}/interface/http';
+import { pinoLoggerLocal } from '@/shared/infra/logs';
+import { UUIDGeneratorAdapter } from '@/shared/infra/uuid';
+
+export const makeHttp{{pascalCase feature}}Controller = (): Http{{pascalCase feature}}Controller => {
+  const {{camelCase feature}}Repository = new Prisma{{pascalCase feature}}Repository();
+  const uuidGenerator = new UUIDGeneratorAdapter();
+  const validation = make{{pascalCase feature}}Validation();
+  const logger = pinoLoggerLocal;
+
+  return new Http{{pascalCase feature}}Controller(
+    {{camelCase feature}}Repository,
+    uuidGenerator,
+    validation,
+    logger
+  );
+};

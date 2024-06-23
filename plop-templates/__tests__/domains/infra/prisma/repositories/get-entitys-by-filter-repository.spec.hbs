@@ -1,0 +1,155 @@
+import { PrismaGet{{pascalCase name}}sByFilterRepository } from '@/domains/{{dashCase name}}/infra/prisma/repositories';
+import { prismaConnector } from '@/shared/infra/prisma/index';
+
+import { PrismaClient } from '@prisma/client';
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+import { OrderByFilter, Pagination } from '@/shared/helpers';
+
+const makeSut = () => {
+  const sut = new PrismaGet{{pascalCase name}}sByFilterRepository();
+
+  return {
+    sut,
+  };
+}
+
+describe('Prisma Get {{pascalCase name}}s by Filter Repository', () => {
+  let prismaTest: PrismaClient | null = null;
+  beforeAll(async () => {
+    prismaTest = prismaConnector.connect(process.env.DATABASE_TEST_URL);
+
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterEach(async () => {
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterAll(async () => {
+    if (prismaTest) {
+      await prismaTest.$disconnect();
+    }
+  });
+
+  it('should list {{camelCase name}}s', async () => {
+    const { sut } = makeSut();
+
+    await prismaTest?.{{camelCase name}}.create({ data: { ...{{pascalCase name}}Factory.build({ enabled: true }) } });
+    await prismaTest?.{{camelCase name}}.create({ data: { ...{{pascalCase name}}Factory.build({ enabled: true }) } });
+    await prismaTest?.{{camelCase name}}.create({ data: { ...{{pascalCase name}}Factory.build({ enabled: true }) } });
+
+    const {{camelCase name}}s = await sut.get({
+      filters: {},
+      pagination: new Pagination({}),
+      orderBy: new OrderByFilter({}),
+    });
+
+    expect({{camelCase name}}s).toHaveLength(3);
+  });
+
+  it('should return empty array if there no {{camelCase name}}s in database', async () => {
+    const { sut } = makeSut();
+
+    const {{camelCase name}}s = await sut.get({
+      filters: {},
+      pagination: new Pagination({}),
+      orderBy: new OrderByFilter({}),
+    });
+
+    expect({{camelCase name}}s).toHaveLength(0);
+  });
+
+  it('should filter {{camelCase name}}s like a elastic search', async () => {
+    const { sut } = makeSut();
+
+    for (const name of ['ABCDE', 'abce', 'abcd']) {
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build({
+        name,
+        enabled: true,
+      });
+
+      await prismaTest?.{{camelCase name}}.create({
+        data: {
+          ...fake{{pascalCase name}},
+        },
+      });
+    }
+
+    const {{camelCase name}}sInDataBase = await prismaTest?.{{camelCase name}}.count({});
+    expect({{camelCase name}}sInDataBase).toBe(3);
+
+    const fakeParams = {
+      filters: {},
+      pagination: new Pagination({}),
+      orderBy: new OrderByFilter({}),
+    };
+
+    const {{camelCase name}}s = await sut.get({
+      ...fakeParams,
+      filters: { name: 'abc' },
+    });
+    expect({{camelCase name}}s).toHaveLength(3);
+
+    const {{camelCase name}}s2 = await sut.get({
+      ...fakeParams,
+      filters: { name: 'abcd' },
+    });
+    expect({{camelCase name}}s2).toHaveLength(2);
+  });
+
+  it('should paginate {{camelCase name}}s', async () => {
+    const { sut } = makeSut();
+
+    const fake{{camelCase name}}s = {{pascalCase name}}Factory.buildList(10, { enabled: true });
+
+    await prismaTest?.{{camelCase name}}.createMany({
+      data: fake{{camelCase name}}s,
+    });
+
+    const {{camelCase name}}sInDataBase = await prismaTest?.{{camelCase name}}.count();
+    expect({{camelCase name}}sInDataBase).toBe(10);
+
+    const fakeParams = {
+      filters: {},
+      pagination: new Pagination({}),
+      orderBy: new OrderByFilter({}),
+    };
+
+    const {{camelCase name}}s = await sut.get(fakeParams);
+    expect({{camelCase name}}s).toHaveLength(10);
+
+    const {{camelCase name}}s2 = await sut.get({
+      ...fakeParams,
+      pagination: new Pagination({ take: 5, skip: 5 }),
+    });
+    expect({{camelCase name}}s2).toHaveLength(5);
+
+    const {{camelCase name}}s3 = await sut.get({
+      ...fakeParams,
+      pagination: new Pagination({ take: 1, skip: 10 }),
+    });
+    expect({{camelCase name}}s3).toHaveLength(0);
+
+    const {{camelCase name}}s4 = await sut.get({
+      ...fakeParams,
+      pagination: new Pagination({ take: 0, skip: 10 }),
+    });
+    expect({{camelCase name}}s4).toHaveLength(0);
+
+    const {{camelCase name}}s5 = await sut.get({
+      ...fakeParams,
+      pagination: new Pagination({ take: 10, skip: 0 }),
+    });
+    expect({{camelCase name}}s5).toHaveLength(10);
+
+    const {{camelCase name}}s6 = await sut.get({
+      ...fakeParams,
+      pagination: new Pagination({ take: 10, skip: 8 }),
+    });
+    expect({{camelCase name}}s6).toHaveLength(2);
+  });
+});

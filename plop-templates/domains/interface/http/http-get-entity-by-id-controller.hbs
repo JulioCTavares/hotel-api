@@ -1,0 +1,73 @@
+import {
+  IGet{{pascalCase name}}ByIdRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+import {
+  {{pascalCase name}}NotFoundException,
+} from '@/domains/{{dashCase name}}/usecases/exceptions';
+import {
+  Get{{pascalCase name}}ByIdController,
+} from '@/domains/{{dashCase name}}/interface/controllers';
+
+import {
+  ok,
+  notFound,
+  badRequest,
+  serverError,
+} from '@/shared/interface/http/helpers';
+import {
+  HttpController,
+  HttpResponse,
+} from '@/shared/interface/http/protocols';
+import { ILoggerLocal } from '@/shared/protocols';
+import { ValidationException } from '@/shared/helpers';
+import { Validation } from '@/shared/interface/validation/protocols';
+
+export interface HttpGet{{pascalCase name}}ByIdRequest {
+  id: string;
+}
+
+export class HttpGet{{pascalCase name}}ByIdController implements HttpController {
+  private controller: Get{{pascalCase name}}ByIdController;
+  private logger: ILoggerLocal;
+
+  constructor(
+    get{{pascalCase name}}ByIdRepository: IGet{{pascalCase name}}ByIdRepository,
+    validation: Validation,
+    logger: ILoggerLocal,
+  ) {
+    this.controller = new Get{{pascalCase name}}ByIdController(
+      get{{pascalCase name}}ByIdRepository,
+      validation,
+      logger,
+    );
+
+    this.logger = logger.child({ httpController: 'get-{{dashCase name}}-by-id' });
+  }
+
+  async handle(httpRequest: HttpGet{{pascalCase name}}ByIdRequest): Promise<HttpResponse> {
+    this.logger.logDebug({ message: 'Request Received', data: httpRequest });
+
+    const { id } = httpRequest;
+
+    try {
+      const {{camelCase name}} = await this.controller.execute({ id });
+
+      this.logger.logDebug({
+        message: '{{pascalCase name}} found',
+        data: {{camelCase name}},
+      });
+
+      if (!{{camelCase name}}) {
+        return notFound(new {{pascalCase name}}NotFoundException({ id }));
+      }
+
+      return ok({{camelCase name}});
+    } catch (error) {
+      if (error instanceof ValidationException) {
+        return badRequest(error);
+      }
+
+      return serverError(error as Error);
+    }
+  }
+}

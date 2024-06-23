@@ -1,0 +1,31 @@
+import {
+  {{pascalCase entity}},
+} from '@/domains/{{dashCase entity}}/entities';
+import {
+  I{{pascalCase feature}}Repository,
+} from '@/domains/{{dashCase entity}}/usecases/repos';
+import { prismaConnector, PrismaException } from '@/shared/infra/prisma';
+import { PrismaClient } from '@prisma/client';
+
+export class Prisma{{pascalCase feature}}Repository
+  implements I{{pascalCase feature}}Repository {
+  private prismaConnection: PrismaClient;
+
+  constructor() {
+    this.prismaConnection = prismaConnector.connect();
+  }
+
+  async {{method}}(
+    params: I{{pascalCase feature}}Repository.Params
+  ): Promise<I{{pascalCase feature}}Repository.Result> {
+    try {
+      const {{camelCase entity}}Made = await this.prismaConnection.{{camelCase entity}}.findUnique({
+        where: params,
+      });
+
+      return null;
+    } catch (error) {
+      throw new PrismaException(error);
+    }
+  }
+}

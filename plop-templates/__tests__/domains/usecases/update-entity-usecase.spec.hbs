@@ -1,0 +1,99 @@
+import 'jest-ts-auto-mock';
+import { createMock } from 'ts-auto-mock';
+import { method, On } from 'ts-auto-mock/extension';
+
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+import {
+  IGet{{pascalCase name}}ByIdRepository,
+  IGet{{pascalCase name}}ByNameRepository,
+  IUpdate{{pascalCase name}}Repository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+import { {{pascalCase name}}NotFoundException } from '@/domains/{{dashCase name}}/usecases/exceptions';
+import { Update{{pascalCase name}}ByIdUsecase as UseCase } from '@/domains/{{dashCase name}}/usecases';
+import { pinoLoggerLocal } from '@/shared/infra/logs';
+
+const makeSut = () => {
+  const get{{pascalCase name}}ByIdRepository: IGet{{pascalCase name}}ByIdRepository =
+    createMock<IGet{{pascalCase name}}ByIdRepository>();
+  const get{{pascalCase name}}ByIdRepositorySpy: jest.Mock = On(get{{pascalCase name}}ByIdRepository).get(
+    method((mock) => mock.get)
+  );
+
+  const get{{pascalCase name}}ByNameRepository: IGet{{pascalCase name}}ByNameRepository =
+    createMock<IGet{{pascalCase name}}ByNameRepository>();
+  const get{{pascalCase name}}ByNameRepositorySpy: jest.Mock = On(get{{pascalCase name}}ByNameRepository).get(
+    method((mock) => mock.get)
+  );
+
+  const update{{pascalCase name}}ByIdRepository: IUpdate{{pascalCase name}}Repository =
+    createMock<IUpdate{{pascalCase name}}Repository>();
+  const update{{pascalCase name}}ByIdRepositorySpy: jest.Mock = On(
+    update{{pascalCase name}}ByIdRepository
+  ).get(method((mock) => mock.update));
+
+  const sut = new UseCase(
+    get{{pascalCase name}}ByIdRepository,
+    get{{pascalCase name}}ByNameRepository,
+    update{{pascalCase name}}ByIdRepository,
+    pinoLoggerLocal
+  );
+
+  return {
+    sut,
+    get{{pascalCase name}}ByIdRepositorySpy,
+    get{{pascalCase name}}ByNameRepositorySpy,
+    update{{pascalCase name}}ByIdRepositorySpy,
+  };
+};
+
+describe('Update {{pascalCase name}} Service', () => {
+  describe('With valid parameters', () => {
+    it('Should update a {{dashCase name}} with success', async () => {
+      const { sut, get{{pascalCase name}}ByIdRepositorySpy, get{{pascalCase name}}ByNameRepositorySpy, update{{pascalCase name}}ByIdRepositorySpy } =
+        makeSut();
+
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build();
+      const fake{{pascalCase name}}Update = {{pascalCase name}}Factory.build();
+
+      const { id, ...paramsToUpdate } = fake{{pascalCase name}}Update;
+
+      get{{pascalCase name}}ByIdRepositorySpy.mockResolvedValueOnce(fake{{pascalCase name}});
+      update{{pascalCase name}}ByIdRepositorySpy.mockResolvedValueOnce(fake{{pascalCase name}}Update);
+      get{{pascalCase name}}ByNameRepositorySpy.mockResolvedValueOnce(null);
+
+      const {{dashCase name}}Updated = await sut.execute({
+        id: fake{{pascalCase name}}.id,
+        paramsToUpdate,
+      });
+
+      expect({{dashCase name}}Updated).toStrictEqual(fake{{pascalCase name}}Update);
+
+      expect(get{{pascalCase name}}ByIdRepositorySpy).toBeCalledTimes(1);
+      expect(get{{pascalCase name}}ByNameRepositorySpy).toBeCalledTimes(1);
+      expect(update{{pascalCase name}}ByIdRepositorySpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe('With invalid parameters', () => {
+    it('Should not update {{dashCase name}} if not exists', async () => {
+      const { sut, get{{pascalCase name}}ByIdRepositorySpy, get{{pascalCase name}}ByNameRepositorySpy, update{{pascalCase name}}ByIdRepositorySpy } =
+        makeSut();
+
+      const { id, ...paramsToUpdate } = {{pascalCase name}}Factory.build();
+
+      get{{pascalCase name}}ByIdRepositorySpy.mockResolvedValueOnce(null);
+
+      const testScript = () =>
+        sut.execute({
+          id,
+          paramsToUpdate,
+        });
+
+      await expect(testScript).rejects.toThrow({{pascalCase name}}NotFoundException);
+
+      expect(get{{pascalCase name}}ByIdRepositorySpy).toBeCalledTimes(1);
+      expect(get{{pascalCase name}}ByNameRepositorySpy).toBeCalledTimes(0);
+      expect(update{{pascalCase name}}ByIdRepositorySpy).toBeCalledTimes(0);
+    });
+  });
+});

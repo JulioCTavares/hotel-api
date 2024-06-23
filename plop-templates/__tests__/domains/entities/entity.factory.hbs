@@ -1,0 +1,14 @@
+import * as factory from 'factory.ts';
+import * as faker from 'faker';
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+const {{dashCase name}}Factory = factory.Sync.makeFactory<{{pascalCase name}}>({
+  id: factory.each(() => faker.datatype.uuid()),
+  name: factory.each(() => faker.name.firstName()),
+  enabled: factory.each(() => faker.datatype.boolean()),
+  createdAt: factory.each(() => faker.datatype.datetime()),
+  updatedAt: factory.each(() => faker.datatype.datetime()),
+  });
+
+  export const {{pascalCase name}}Factory = {{dashCase name}}Factory;
+  

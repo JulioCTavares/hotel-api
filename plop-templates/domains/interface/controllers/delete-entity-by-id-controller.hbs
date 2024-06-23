@@ -1,0 +1,57 @@
+import {
+  Delete{{pascalCase name}}ByIdUsecase,
+} from '@/domains/{{dashCase name}}/usecases';
+import {
+  IGet{{pascalCase name}}ByIdRepository,
+  IDelete{{pascalCase name}}ByIdRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+
+import { ILoggerLocal } from '@/shared/protocols';
+import { ValidationException } from '@/shared/helpers';
+import { Validation } from '@/shared/interface/validation/protocols';
+
+export interface Delete{{pascalCase name}}ByIdRequest {
+  id: string;
+}
+
+export type Delete{{pascalCase name}}ByIdResponse = void;
+
+export class Delete{{pascalCase name}}ByIdController {
+  private usecase: Delete{{pascalCase name}}ByIdUsecase;
+  private logger: ILoggerLocal;
+
+  constructor(
+    get{{pascalCase name}}ByIdRepository: IGet{{pascalCase name}}ByIdRepository,
+    delete{{pascalCase name}}ByIdRepository: IDelete{{pascalCase name}}ByIdRepository,
+    private readonly validation: Validation,
+    logger: ILoggerLocal,
+  ) {
+    this.usecase = new Delete{{pascalCase name}}ByIdUsecase(
+      get{{pascalCase name}}ByIdRepository,
+      delete{{pascalCase name}}ByIdRepository,
+      logger,
+    );
+
+    this.logger = logger.child({ controller: 'delete-{{dashCase name}}-by-id' });
+  }
+
+  async execute(
+    request: Delete{{pascalCase name}}ByIdRequest,
+  ): Promise<Delete{{pascalCase name}}ByIdResponse> {
+    this.logger.logDebug({ message: 'Request received', data: request });
+
+    const { id } = request;
+
+    const hasError = this.validation.validate({ id });
+
+    if (hasError) {
+      throw new ValidationException(hasError);
+    }
+
+    this.logger.logDebug({ message: 'Params validated' });
+
+    await this.usecase.execute(id);
+
+    this.logger.logDebug({ message: '{{pascalCase name}} deleted', data: { id } });
+  }
+}

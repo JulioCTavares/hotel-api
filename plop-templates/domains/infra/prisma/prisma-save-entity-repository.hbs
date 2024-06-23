@@ -1,0 +1,33 @@
+import { {{pascalCase name}} as {{pascalCase name}}Model, PrismaClient } from '@prisma/client';
+
+import { ISave{{pascalCase name}}Repository } from '@/domains/{{dashCase name}}/usecases/repos';
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+import { convertNullToUndefined } from '@/shared/helpers';
+import { prismaConnector, PrismaException } from '@/shared/infra/prisma';
+
+export class PrismaSave{{pascalCase name}}Repository implements ISave{{pascalCase name}}Repository {
+  private prismaConnection: PrismaClient;
+
+  constructor() {
+    this.prismaConnection = prismaConnector.connect();
+  }
+
+  async save(
+    {{camelCase name}}Params: ISave{{pascalCase name}}Repository.Params,
+  ): Promise<ISave{{pascalCase name}}Repository.Result> {
+    try {
+      const { ...rest{{pascalCase name}}Params } = {{camelCase name}}Params;
+
+      const {{camelCase name}}DTO = await this.prismaConnection.{{camelCase name}}.create({
+        data: rest{{pascalCase name}}Params,
+      });
+
+      const {{camelCase name}} = new {{pascalCase name}}(convertNullToUndefined<{{pascalCase name}}Model>({{camelCase name}}DTO));
+
+      return {{camelCase name}};
+    } catch (error) {
+      throw new PrismaException(error);
+    }
+  }
+}

@@ -7,7 +7,8 @@
     "build": "swc src -d dist",
     "start": "node dist/main/infra/server.js",
     "prisma:migration": "npx prisma migrate dev --schema=./src/main/infra/prisma/schema.prisma",
-    "prisma:studio": "npx prisma studio --schema=./src/main/infra/prisma/schema.prisma"
+    "prisma:studio": "npx prisma studio --schema=./src/main/infra/prisma/schema.prisma",
+    "plop": "plop"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "@types/swagger-ui-express": "^4.1.6",
     "eslint": "^8.57.0",
     "pino-pretty": "^11.2.1",
+    "plop": "^4.0.1",
     "swagger-ui-express": "^5.0.1",
     "tsup": "^8.1.0",
     "tsx": "^4.15.7",

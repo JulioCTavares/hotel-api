@@ -1,0 +1,12 @@
+export interface IEventEmitterService {
+  emit(event: IEventEmitterService.Params): Promise<IEventEmitterService.Result>;
+}
+
+export namespace IEventEmitterService {
+  export type Params = {
+    name: string;
+    data?: any;
+  };
+
+  export type Result = void;
+}

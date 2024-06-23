@@ -1,0 +1,136 @@
+import {
+  security,
+  SwaggerContents,
+  SwaggerPath,
+  SwaggerSchemas,
+  SwaggerTypes,
+  SwaggerQuery,
+  defaultFilterParams,
+  defaultResponses,
+  SwaggerResponse,
+} from '@/shared/infra/swagger/helpers';
+
+export const {{camelCase name}}Tag = '{{pascalCase name}}';
+
+// Uncomment the next lines if you need
+/*
+* export const entityIncludedInto{{pascalCase name}}Object = SwaggerTypes.object(false, [
+*   ['id', SwaggerTypes.uuid(true)],
+*   ['name', SwaggerTypes.string(true)],
+* ]);
+*/
+
+export const {{camelCase name}}Schema = SwaggerSchemas.create('{{pascalCase name}}', [
+  ['id', SwaggerTypes.uuid(true)],
+  ['name', SwaggerTypes.string(true)],
+  // ['included_entity_name', SwaggerTypes.array(false, entityIncludedInto{{pascalCase name}}Object, 100)],
+  ['created_at', SwaggerTypes.dateTime(true)],
+  ['updated_at', SwaggerTypes.dateTime(true)],
+]);
+
+export const {{camelCase name}}Object = SwaggerTypes.object(true, [
+  ['id', SwaggerTypes.uuid(true)],
+  ['name', SwaggerTypes.string(true)],
+  // ['included_entity_name', SwaggerTypes.array(false, entityIncludedInto{{pascalCase name}}Object, 100)],
+  ['created_at', SwaggerTypes.dateTime(true)],
+  ['updated_at', SwaggerTypes.dateTime(true)],
+]);
+
+export const {{camelCase name}}Paths = {
+  '/{{dashCase name}}s': {
+    get: {
+      tags: [{{camelCase name}}Tag],
+      summary: 'Get {{pascalCase name}}s',
+      produces: ['application/json'],
+      parameters: [
+        ...SwaggerQuery.params([
+          ['name', SwaggerTypes.string()],
+        ]),
+        ...defaultFilterParams,
+      ],
+      security,
+      responses: {
+        ...SwaggerResponse.ok(
+          '{{pascalCase name}}s found',
+          SwaggerContents.applicationJson([
+            ['items', SwaggerTypes.array(true, {{camelCase name}}Object, 100)],
+            ['totalItemsListed', SwaggerTypes.integer()],
+            ['totalItems', SwaggerTypes.integer()],
+          ]),
+        ),
+        ...defaultResponses,
+      },
+    },
+    post: {
+      tags: [{{camelCase name}}Tag],
+      summary: 'Create a new {{camelCase name}}',
+      produces: ['application/json'],
+      requestBody: {
+        content: SwaggerContents.applicationJson(
+          [
+            ['name', SwaggerTypes.string(true)],
+          ],
+        ),
+      },
+      security,
+      responses: {
+        ...SwaggerResponse.created(
+          '{{pascalCase name}} created',
+          SwaggerContents.applicationJson([], [], {{camelCase name}}Object)
+        ),
+        ...defaultResponses,
+      },
+    },
+  },
+  '/{{dashCase name}}s/{id}': {
+    get: {
+      tags: [{{camelCase name}}Tag],
+      summary: 'Get a {{pascalCase name}}',
+      produces: ['application/json'],
+      parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      security,
+      responses: {
+        ...SwaggerResponse.ok(
+          '{{pascalCase name}} found',
+          SwaggerContents.applicationJson([], [], {{camelCase name}}Object)
+        ),
+        ...SwaggerResponse.notFound('{{pascalCase name}} not found'),
+        ...defaultResponses,
+      },
+    },
+    patch: {
+      tags: [{{camelCase name}}Tag],
+      summary: 'Update a {{pascalCase name}} by id',
+      produces: ['application/json'],
+      parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      requestBody: {
+        content: SwaggerContents.applicationJson(
+          [
+            ['name', SwaggerTypes.string()],
+          ],
+        ),
+      },
+      security,
+      responses: {
+        ...SwaggerResponse.ok(
+          '{{pascalCase name}} updated',
+          SwaggerContents.applicationJson([], [], {{camelCase name}}Object),
+        ),
+        ...SwaggerResponse.notFound('{{pascalCase name}} not found'),
+        ...defaultResponses,
+      },
+    },
+    delete: {
+      tags: [{{camelCase name}}Tag],
+      summary: 'Delete a {{pascalCase name}} by id',
+      produces: ['application/json'],
+      parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      security,
+      responses: {
+        ...SwaggerResponse.noContent(),
+        ...SwaggerResponse.notFound('{{pascalCase name}} not found'),
+        ...defaultResponses,
+      },
+    },
+  },
+};

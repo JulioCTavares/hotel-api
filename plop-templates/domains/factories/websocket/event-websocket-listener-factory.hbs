@@ -1,0 +1,13 @@
+import { Event{{pascalCase feature}}Listener } from '@/domains/{{dashCase name}}/interface/websocket';
+
+import { SocketEventEmitterService } from '@/shared/infra/websocket/services';
+import { pinoLoggerLocal as logger } from '@/shared/infra/logs';
+
+export const makeEvent{{pascalCase feature}}Listener = (): Event{{pascalCase feature}}Listener => {
+  const socketEventEmitterService = new SocketEventEmitterService;
+
+  return new Event{{pascalCase feature}}Listener(
+    socketEventEmitterService,
+    logger
+  );
+}

@@ -1,0 +1,73 @@
+import {
+  Create{{pascalCase name}}Usecase,
+} from '@/domains/{{dashCase name}}/usecases';
+import {
+  ISave{{pascalCase name}}Repository,
+  IGet{{pascalCase name}}ByNameRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+import {
+  {{pascalCase name}}DefaultPresenter,
+  {{pascalCase name}}Transformers,
+} from '@/domains/{{dashCase name}}/interface/presenters';
+
+import { ValidationException } from '@/shared/helpers';
+import { ILoggerLocal, IUuidGenerator } from '@/shared/protocols';
+import { Validation } from '@/shared/interface/validation/protocols';
+
+export interface Create{{pascalCase name}}Request {
+  name: string;
+}
+
+export type Create{{pascalCase name}}Response = {{pascalCase name}}DefaultPresenter;
+
+export class Create{{pascalCase name}}Controller {
+  private usecase: Create{{pascalCase name}}Usecase;
+  private logger: ILoggerLocal;
+
+  constructor(
+    get{{pascalCase name}}ByNameRepository: IGet{{pascalCase name}}ByNameRepository,
+    save{{pascalCase name}}Repository: ISave{{pascalCase name}}Repository,
+    uuidGenerator: IUuidGenerator,
+    private readonly validation: Validation,
+    logger: ILoggerLocal,
+  ) {
+    this.usecase = new Create{{pascalCase name}}Usecase(
+      get{{pascalCase name}}ByNameRepository,
+      save{{pascalCase name}}Repository,
+      uuidGenerator,
+      logger
+    );
+
+    this.logger = logger.child({ controller: 'create-{{dashCase name}}' });
+  }
+
+  async execute(
+    request: Create{{pascalCase name}}Request
+  ): Promise<Create{{pascalCase name}}Response> {
+    this.logger.logDebug({ message: 'Request received', data: request });
+
+    const { name } = request;
+
+    const hasError = this.validation.validate({
+      name,
+    });
+
+    if (hasError) {
+      throw new ValidationException(hasError);
+    }
+
+    this.logger.logDebug({ message: 'Params validated' });
+
+    const {{camelCase name}}Created = await this.usecase.execute({ name });
+
+    const {{camelCase name}}CreatedPresenter =
+      {{pascalCase name}}Transformers.generateDefaultPresenter({{camelCase name}}Created);
+
+    this.logger.logDebug({
+      message: '{{pascalCase name}} created',
+      data: {{camelCase name}}CreatedPresenter,
+    });
+
+    return {{camelCase name}}CreatedPresenter;
+  }
+}

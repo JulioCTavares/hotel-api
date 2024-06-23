@@ -1,0 +1,130 @@
+import http from 'http';
+import request from 'supertest';
+import { PrismaClient } from '@prisma/client';
+
+import { prismaConnector } from '@/shared/infra/prisma';
+import { HttpStatus } from '@/shared/interface/http/helpers';
+
+import { User } from '@/domains/user/entities';
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+import { UserFactory } from '@/tests/domains/user/entities';
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+
+import { mockCognitoGetUser } from '@/tests/shared/mocks/aws/cognito';
+import { initAppE2E } from '@/tests/shared/utils';
+
+jest.setTimeout(5000);
+
+jest.mock('aws-sdk', () => {
+  return {
+    CognitoIdentityServiceProvider: class {
+      getUser = mockCognitoGetUser;
+    },
+  };
+});
+
+describe('HttpGet{{pascalCase name}}sByFilterController (e2e)', () => {
+  let app: http.Server;
+  let prismaTest: PrismaClient;
+
+  let authUser: User;
+  let {{dashCase name}}s: {{pascalCase name}}[];
+
+  beforeAll(async () => {
+    prismaTest = prismaConnector.connect(process.env.DATABASE_TEST_URL);
+    app = initAppE2E();
+
+    await prismaTest.user.deleteMany({});
+    await prismaTest.{{camelCase name}}.deleteMany({});
+
+    authUser = await prismaTest.user.create({
+      data: UserFactory.build({
+        enabled: true,
+        isAdmin: false,
+      }),
+    });
+
+    await prismaTest.{{dashCase name}}.createMany({
+      data: {{pascalCase name}}Factory.buildList(10, {
+        enabled: true,
+      }),
+    });
+
+    {{dashCase name}}s = await prismaTest.{{camelCase name}}.findMany({});
+
+    mockCognitoGetUser.mockImplementation((params: any, callback: any) => {
+      callback(null, {
+        UserAttributes: [
+          {
+            Name: 'email',
+            Value: authUser.email,
+          },
+        ],
+      });
+    });
+  });
+
+  afterAll(async () => {
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+      await prismaTest.user.deleteMany({});
+      await prismaTest.$disconnect();
+    }
+  });
+
+  describe('With valid parameters', () => {
+    it('GET /{{dashCase name}}s', async () => {
+      const res = await request(app)
+        .get('/{{dashCase name}}s')
+        .set('Authorization', 'Bearer any_token');
+
+      expect(res.status).toBe(HttpStatus.OK);
+      expect(res.body.items.length).toBe({{dashCase name}}s.length);
+    });
+
+    it('GET /{{dashCase name}}s - Should paginate {{camelCase name}}s', async () => {
+      const paginationCases = [
+        { take: 5, skip: 5, totalItemsListed: 5 },
+        { take: 1, skip: 10, totalItemsListed: 0 },
+        { take: 0, skip: 10, totalItemsListed: 0 },
+        { take: 10, skip: 0, totalItemsListed: 10 },
+        { take: 10, skip: 8, totalItemsListed: 2 },
+      ];
+
+      for (const paginationCase of paginationCases) {
+        const res = await request(app)
+          .get(
+            `/{{dashCase name}}s?take=${paginationCase.take}&skip=${paginationCase.skip}`
+          )
+          .set('Authorization', 'Bearer any_token');
+
+        expect(res.status).toBe(HttpStatus.OK);
+        expect(res.body.totalItems).toBe({{dashCase name}}s.length);
+        expect(res.body.totalItemsListed).toBe(paginationCase.totalItemsListed);
+      }
+    });
+  });
+
+  describe('With invalid parameters', () => {
+    it('GET /{{dashCase name}}s - Should fail with invalid access token', async () => {
+      mockCognitoGetUser.mockImplementationOnce((params: any, callback: any) => {
+        callback(new Error("any_error"), null);
+      });
+
+      const res = await request(app)
+        .get('/{{dashCase name}}s')
+        .set('Authorization', 'token');
+
+      expect(res.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('GET /{{dashCase name}}s - Should fail with invalid filters', async () => {
+      const res = await request(app)
+        .get('/{{dashCase name}}s?name=123')
+        .set('Authorization', 'Bearer any_token');
+
+      expect(res.status).toBe(HttpStatus.BAD_REQUEST);
+    });
+  });
+});

@@ -1,0 +1,12 @@
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+export interface IUpdate{{pascalCase name}}Repository {
+  update(
+    {{camelCase name}}ToUpdate: IUpdate{{pascalCase name}}Repository.Params,
+  ): Promise<IUpdate{{pascalCase name}}Repository.Result>;
+}
+
+export namespace IUpdate{{pascalCase name}}Repository {
+  export type Params = {{pascalCase name}};
+  export type Result = {{pascalCase name}};
+}

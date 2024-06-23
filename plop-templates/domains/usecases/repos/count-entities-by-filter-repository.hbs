@@ -1,0 +1,12 @@
+import { {{pascalCase name}}Filters } from '@/domains/{{dashCase name}}/usecases';
+
+export interface ICount{{pascalCase name}}sByFilterRepository {
+  count(
+    filters: ICount{{pascalCase name}}sByFilterRepository.Params,
+  ): Promise<ICount{{pascalCase name}}sByFilterRepository.Result>;
+}
+
+export namespace ICount{{pascalCase name}}sByFilterRepository {
+  export type Params = {{pascalCase name}}Filters['filters'];
+  export type Result = number;
+}

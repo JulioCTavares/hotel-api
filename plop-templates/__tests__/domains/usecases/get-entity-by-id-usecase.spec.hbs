@@ -1,0 +1,83 @@
+import 'jest-ts-auto-mock';
+import { createMock } from 'ts-auto-mock';
+import { method, On } from 'ts-auto-mock/extension';
+
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+import {
+  IGet{{pascalCase name}}ByIdRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+import { Get{{pascalCase name}}ByIdUsecase as UseCase } from '@/domains/{{dashCase name}}/usecases';
+import { pinoLoggerLocal } from '@/shared/infra/logs';
+
+const makeSut = () => {
+  const get{{pascalCase name}}ByIdRepository: IGet{{pascalCase name}}ByIdRepository =
+    createMock<IGet{{pascalCase name}}ByIdRepository>();
+  const get{{pascalCase name}}ByIdRepositorySpy: jest.Mock = On(get{{pascalCase name}}ByIdRepository).get(
+    method((mock) => mock.get)
+  );
+
+  const sut = new UseCase(
+    get{{pascalCase name}}ByIdRepository,
+    pinoLoggerLocal
+  );
+
+  return {
+    sut,
+    get{{pascalCase name}}ByIdRepositorySpy,
+  };
+};
+
+describe('Get {{pascalCase name}} By Id Service', () => {
+  describe('With valid parameters', () => {
+    it('Should get a {{dashCase name}} by id with success', async () => {
+      const {
+        sut,
+        get{{pascalCase name}}ByIdRepositorySpy,
+      } = makeSut();
+
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build();
+
+      get{{pascalCase name}}ByIdRepositorySpy.mockResolvedValueOnce(fake{{pascalCase name}});
+
+      await sut.execute(fake{{pascalCase name}}.id);
+
+      expect(get{{pascalCase name}}ByIdRepositorySpy).toBeCalledTimes(1);
+    });
+
+    it('Should return null if {{dashCase name}} not found', async () => {
+      const {
+        sut,
+        get{{pascalCase name}}ByIdRepositorySpy,
+      } = makeSut();
+
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build();
+
+      get{{pascalCase name}}ByIdRepositorySpy.mockResolvedValueOnce(null);
+
+      await sut.execute(fake{{pascalCase name}}.id);
+
+      expect(get{{pascalCase name}}ByIdRepositorySpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe('With invalid parameters', () => {
+    it('Should throw if Get{{pascalCase name}}ByEmailInCloudRepository throws', async () => {
+      const {
+        sut,
+        get{{pascalCase name}}ByIdRepositorySpy,
+      } = makeSut();
+
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build();
+
+      get{{pascalCase name}}ByIdRepositorySpy.mockImplementationOnce(() => {
+        return Promise.reject(new Error());
+      });
+
+      const testScript = () => sut.execute(fake{{pascalCase name}}.id);
+
+      await expect(testScript).rejects.toThrow();
+
+      expect(get{{pascalCase name}}ByIdRepositorySpy).toBeCalledTimes(1);
+    });
+  });
+});

@@ -1,0 +1,68 @@
+import {
+  I{{pascalCase feature}}Repository,
+} from '@/domains/{{dashCase entity}}/usecases/repos';
+import {
+  {{pascalCase feature}}Usecase,
+} from '@/domains/{{dashCase entity}}/usecases';
+import {
+  {{pascalCase entity}}DefaultPresenter,
+  {{pascalCase entity}}Transformers,
+} from '@/domains/{{dashCase entity}}/interface/presenters';
+
+import { ValidationException } from '@/shared/helpers';
+import { ILoggerLocal, IUuidGenerator } from '@/shared/protocols';
+import { Validation } from '@/shared/interface/validation/protocols';
+
+export interface {{pascalCase feature}}Request {
+
+}
+
+export type {{pascalCase feature}}Response = {{pascalCase entity}}DefaultPresenter;
+
+export class {{pascalCase feature}}Controller {
+  private usecase: {{pascalCase feature}}Usecase;
+  private logger: ILoggerLocal;
+
+  constructor(
+    {{camelCase feature}}Repository: I{{pascalCase feature}}Repository,
+    uuidGenerator: IUuidGenerator,
+    private readonly validation: Validation,
+    logger: ILoggerLocal
+  ) {
+    this.usecase = new {{pascalCase feature}}Usecase(
+      {{camelCase feature}}Repository,
+      uuidGenerator,
+      logger
+    );
+
+    this.logger = logger.child({ controller: '{{dashCase feature}}'});
+  }
+
+  async execute(request: {{pascalCase feature}}Request): Promise<{{pascalCase feature}}Response> {
+    this.logger.logDebug({ message: 'Request received', data: request });
+
+    const { } = request;
+
+    const hasError = this.validation.validate({
+
+    });
+
+    if (hasError) {
+      throw new ValidationException(hasError);
+    }
+
+    this.logger.logDebug({ message: 'Params validated' });
+
+    const {{camelCase entity}}Made = await this.usecase.execute({ });
+
+    const {{camelCase entity}}MadePresenter =
+      {{pascalCase entity}}Transformers.generateDefaultTransformer({{camelCase entity}}Made);
+
+    this.logger.logDebug({
+      message: '{{camelCase entity}} made',
+      data: {{camelCase entity}}MadePresenter,
+    });
+
+    return {{camelCase entity}}MadePresenter;
+  }
+}

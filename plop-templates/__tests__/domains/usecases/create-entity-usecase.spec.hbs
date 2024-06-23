@@ -1,0 +1,108 @@
+import 'jest-ts-auto-mock';
+import { createMock } from 'ts-auto-mock';
+import { method, On } from 'ts-auto-mock/extension';
+
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+import {
+  ISave{{pascalCase name}}Repository,
+  IGet{{pascalCase name}}ByNameRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+import { {{pascalCase name}}AlreadyExistsException } from '@/domains/{{dashCase name}}/usecases/exceptions';
+import { Create{{pascalCase name}}Usecase as UseCase } from '@/domains/{{dashCase name}}/usecases';
+import { IUuidGenerator } from '@/shared/protocols';
+import { pinoLoggerLocal } from '@/shared/infra/logs';
+
+const makeSut = () => {
+  const uuidGenerator: IUuidGenerator = createMock<IUuidGenerator>();
+
+  const get{{pascalCase name}}ByNameRepository: IGet{{pascalCase name}}ByNameRepository =
+    createMock<IGet{{pascalCase name}}ByNameRepository>();
+  const get{{pascalCase name}}ByNameRepositorySpy: jest.Mock = On(
+    get{{pascalCase name}}ByNameRepository
+  ).get(method((mock) => mock.get));
+
+  const save{{pascalCase name}}Repository: ISave{{pascalCase name}}Repository =
+    createMock<ISave{{pascalCase name}}Repository>();
+  const save{{pascalCase name}}RepositorySpy: jest.Mock = On(save{{pascalCase name}}Repository).get(
+    method((mock) => mock.save)
+  );
+
+  const sut = new UseCase(
+    get{{pascalCase name}}ByNameRepository,
+    save{{pascalCase name}}Repository,
+    uuidGenerator,
+    pinoLoggerLocal
+  );
+
+  return {
+    sut,
+    get{{pascalCase name}}ByNameRepositorySpy,
+    save{{pascalCase name}}RepositorySpy
+  };
+};
+
+describe('Create {{pascalCase name}} Service', () => {
+  describe('With valid parameters', () => {
+    it('Should return a new {{pascalCase name}} with success', async () => {
+      const {
+        sut,
+        get{{pascalCase name}}ByNameRepositorySpy,
+        save{{pascalCase name}}RepositorySpy,
+      } = makeSut();
+
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build();
+
+      get{{pascalCase name}}ByNameRepositorySpy.mockResolvedValueOnce(null);
+      save{{pascalCase name}}RepositorySpy.mockResolvedValueOnce(fake{{pascalCase name}});
+
+      const {{dashCase name}}Created = await sut.execute(fake{{pascalCase name}});
+
+      expect({{dashCase name}}Created).toStrictEqual(fake{{pascalCase name}});
+      expect(get{{pascalCase name}}ByNameRepositorySpy).toBeCalledTimes(1);
+      expect(save{{pascalCase name}}RepositorySpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe('With invalid parameters', () => {
+    it('Should not create {{dashCase name}} if {{dashCase name}} already exist', async () => {
+      const {
+        sut,
+        get{{pascalCase name}}ByNameRepositorySpy,
+        save{{pascalCase name}}RepositorySpy,
+      } = makeSut();
+
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build();
+
+      get{{pascalCase name}}ByNameRepositorySpy.mockResolvedValueOnce(fake{{pascalCase name}});
+
+      const testScript = () => sut.execute(fake{{pascalCase name}});
+
+      await expect(testScript).rejects.toThrow({{pascalCase name}}AlreadyExistsException);
+
+      expect(get{{pascalCase name}}ByNameRepositorySpy).toBeCalledTimes(1);
+      expect(save{{pascalCase name}}RepositorySpy).toBeCalledTimes(0);
+    });
+
+    it('Should throw if Create{{pascalCase name}}Repository throws', async () => {
+      const {
+        sut,
+        get{{pascalCase name}}ByNameRepositorySpy,
+        save{{pascalCase name}}RepositorySpy,
+      } = makeSut();
+
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build();
+
+      get{{pascalCase name}}ByNameRepositorySpy.mockResolvedValueOnce(null);
+      save{{pascalCase name}}RepositorySpy.mockImplementationOnce(() => {
+        return Promise.reject(new Error());
+      });
+
+      const testScript = () => sut.execute(fake{{pascalCase name}});
+
+      await expect(testScript).rejects.toThrow();
+
+      expect(get{{pascalCase name}}ByNameRepositorySpy).toBeCalledTimes(1);
+      expect(save{{pascalCase name}}RepositorySpy).toBeCalledTimes(1);
+    });
+  });
+});

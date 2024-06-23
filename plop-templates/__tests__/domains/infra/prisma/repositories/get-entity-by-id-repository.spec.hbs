@@ -1,0 +1,60 @@
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+import { PrismaGet{{pascalCase name}}ByIdRepository } from '@/domains/{{dashCase name}}/infra/prisma/repositories';
+import { prismaConnector } from '@/shared/infra/prisma/index';
+
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+import { PrismaClient } from '@prisma/client';
+
+const makeSut = () => {
+  const sut = new PrismaGet{{pascalCase name}}ByIdRepository();
+
+  return {
+    sut,
+  };
+}
+
+describe('Prisma Get {{pascalCase name}} by ID Repository', () => {
+    let prismaTest: PrismaClient | null = null;
+  beforeAll(async () => {
+    prismaTest = prismaConnector.connect(process.env.DATABASE_TEST_URL);
+
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterEach(async () => {
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterAll(async () => {
+    if (prismaTest) {
+      await prismaTest.$disconnect();
+    }
+  });
+
+  it('should list a {{camelCase name}} by id', async () => {
+    const { sut } = makeSut();
+
+    const fake{{pascalCase name}} = {{pascalCase name}}Factory.build({ enabled: true });
+
+    const {{camelCase name}}Created = await prismaTest?.{{camelCase name}}.create({
+      data: fake{{pascalCase name}},
+    });
+
+    if (!{{camelCase name}}Created) throw new Error('{{pascalCase name}} not created');
+
+    const {{camelCase name}} = await sut.get({{camelCase name}}Created.id);
+
+    const expectedResult = new {{pascalCase name}}({
+      ...fake{{pascalCase name}},
+      id: {{camelCase name}}Created.id,
+      createdAt: {{camelCase name}}Created.createdAt,
+      updatedAt: {{camelCase name}}Created.updatedAt,
+    });
+
+    expect({{camelCase name}}).toStrictEqual(expectedResult);
+  });
+});

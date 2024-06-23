@@ -1,0 +1,66 @@
+import 'jest-ts-auto-mock';
+import { createMock } from 'ts-auto-mock';
+import { method, On } from 'ts-auto-mock/extension';
+
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+import {
+  IGet{{pascalCase name}}sByFilterRepository,
+  ICount{{pascalCase name}}sByFilterRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+import { Get{{pascalCase name}}sByFilterUsecase as UseCase } from '@/domains/{{dashCase name}}/usecases';
+import { pinoLoggerLocal } from '@/shared/infra/logs';
+import { OrderByFilter, Pagination } from '@/shared/helpers';
+
+const makeSut = () => {
+  const get{{pascalCase name}}sByFilterRepository: IGet{{pascalCase name}}sByFilterRepository =
+    createMock<IGet{{pascalCase name}}sByFilterRepository>();
+  const get{{pascalCase name}}sByFilterRepositorySpy: jest.Mock = On(
+    get{{pascalCase name}}sByFilterRepository
+  ).get(method((mock) => mock.get));
+
+  const count{{pascalCase name}}ByFilterRepository: ICount{{pascalCase name}}sByFilterRepository =
+    createMock<ICount{{pascalCase name}}sByFilterRepository>();
+  const count{{pascalCase name}}ByFilterRepositorySpy: jest.Mock = On(
+    count{{pascalCase name}}ByFilterRepository
+  ).get(method((mock) => mock.count));
+
+  const sut = new UseCase(
+    get{{pascalCase name}}sByFilterRepository,
+    count{{pascalCase name}}ByFilterRepository,
+    pinoLoggerLocal
+  );
+
+  return {
+    sut,
+    get{{pascalCase name}}sByFilterRepositorySpy,
+    count{{pascalCase name}}ByFilterRepositorySpy,
+  };
+};
+
+describe('Get {{pascalCase name}} By Filters Service', () => {
+  describe('With valid parameters', () => {
+    it('Should get a {{dashCase name}}s by filters with success', async () => {
+      const {
+        sut,
+        get{{pascalCase name}}sByFilterRepositorySpy,
+        count{{pascalCase name}}ByFilterRepositorySpy,
+      } = makeSut();
+
+      const fake{{pascalCase name}}s = {{pascalCase name}}Factory.buildList(8);
+
+      get{{pascalCase name}}sByFilterRepositorySpy.mockResolvedValueOnce(fake{{pascalCase name}}s);
+      count{{pascalCase name}}ByFilterRepositorySpy.mockResolvedValueOnce(fake{{pascalCase name}}s.length);
+
+      const {{dashCase name}}s = await sut.execute({
+        filters: {},
+        orderBy: new OrderByFilter({}),
+        pagination: new Pagination({}),
+      });
+
+      expect({{dashCase name}}s.{{dashCase name}}s).toStrictEqual(fake{{pascalCase name}}s);
+      expect({{dashCase name}}s.total{{pascalCase name}}s).toEqual(fake{{pascalCase name}}s.length);
+      expect(get{{pascalCase name}}sByFilterRepositorySpy).toBeCalledTimes(1);
+      expect(count{{pascalCase name}}ByFilterRepositorySpy).toBeCalledTimes(1);
+    });
+  });
+});

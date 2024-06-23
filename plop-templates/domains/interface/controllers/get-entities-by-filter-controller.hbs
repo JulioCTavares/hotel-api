@@ -1,0 +1,123 @@
+import {
+  Get{{pascalCase name}}sByFilterUsecase,
+} from '@/domains/{{dashCase name}}/usecases';
+import {
+  ICount{{pascalCase name}}sByFilterRepository,
+  IGet{{pascalCase name}}sByFilterRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+
+import {
+  {{pascalCase name}}DefaultPresenter,
+  {{pascalCase name}}Transformers,
+} from '@/domains/{{dashCase name}}/interface/presenters';
+
+import {
+  OrderByFilter,
+  OrderByMode,
+  DateFilter,
+  Pagination,
+  ValidationException,
+} from '@/shared/helpers';
+
+import { ILoggerLocal } from '@/shared/protocols';
+import { Validation } from '@/shared/interface/validation/protocols';
+
+export interface Get{{pascalCase name}}sByFilterRequest {
+  name?: string;
+  createdAt?: DateFilter;
+  updatedAt?: DateFilter;
+  orderBy: {
+    property?: string;
+    mode?: OrderByMode;
+  };
+  take?: number;
+  skip?: number;
+  count?: boolean;
+}
+
+export type Get{{pascalCase name}}sByFilterResponse =
+  | {
+      items: {{pascalCase name}}DefaultPresenter[];
+      totalItemsListed: number;
+      totalItems: number;
+    }
+  | { totalItems: number };
+
+export class Get{{pascalCase name}}sByFilterController {
+  private usecase: Get{{pascalCase name}}sByFilterUsecase;
+  private logger: ILoggerLocal;
+
+  constructor(
+    get{{pascalCase name}}sByFilterRepository: IGet{{pascalCase name}}sByFilterRepository,
+    count{{pascalCase name}}sByFilterRepository: ICount{{pascalCase name}}sByFilterRepository,
+    private readonly validation: Validation,
+    logger: ILoggerLocal,
+  ) {
+    this.usecase = new Get{{pascalCase name}}sByFilterUsecase(
+      get{{pascalCase name}}sByFilterRepository,
+      count{{pascalCase name}}sByFilterRepository,
+      logger,
+    );
+
+    this.logger = logger.child({ controller: 'get-{{dashCase name}}s-by-filter' });
+  }
+
+  async execute(
+    request: Get{{pascalCase name}}sByFilterRequest,
+  ): Promise<Get{{pascalCase name}}sByFilterResponse> {
+    this.logger.logDebug({ message: 'Request received', data: request });
+
+    const hasErrors = this.validation.validate(request);
+
+    if (hasErrors) {
+      throw new ValidationException(hasErrors);
+    }
+
+    this.logger.logDebug({ message: 'Params validated' });
+
+    const {
+      orderBy: orderByDTO,
+      take,
+      skip,
+      name,
+      createdAt,
+      updatedAt,
+      count,
+    } = request;
+
+    const orderBy = new OrderByFilter(orderByDTO);
+    const pagination = new Pagination({ take, skip });
+
+    const { {{camelCase name}}s, total{{pascalCase name}}s } = await this.usecase.execute({
+      filters: {
+        name,
+        createdAt,
+        updatedAt,
+      },
+      orderBy,
+      pagination,
+      count,
+    });
+
+    this.logger.logDebug({
+      message: '{{pascalCase name}}s found',
+      data: { total{{pascalCase name}}s, totalItemsListed: {{camelCase name}}s?.length },
+    });
+
+    if (count) {
+      return {
+        totalItems: total{{pascalCase name}}s,
+      };
+    }
+
+    const {{camelCase name}}sDTOs = {{camelCase name}}s?.map(({{camelCase name}}) =>
+      {{pascalCase name}}Transformers.generateDefaultPresenter({{camelCase name}})
+    );
+
+    return {
+      items: {{camelCase name}}sDTOs,
+      totalItems: total{{pascalCase name}}s,
+      totalItemsListed: {{camelCase name}}sDTOs?.length,
+    };
+  }
+}

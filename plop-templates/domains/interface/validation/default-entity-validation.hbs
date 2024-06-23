@@ -1,0 +1,13 @@
+import { Validation } from '@/shared/interface/validation/protocols';
+
+import {
+  ValidationComposite,
+} from '@/shared/interface/validation/validators';
+
+import { } from '@/shared/infra/validators';
+
+const validations: Validation[] = [];
+
+export const make{{pascalCase feature}}Validation = (): ValidationComposite => {
+  return new ValidationComposite(validations);
+};

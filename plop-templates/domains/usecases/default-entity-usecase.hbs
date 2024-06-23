@@ -1,0 +1,57 @@
+import {
+  {{pascalCase entity}},
+} from '@/domains/{{dashCase entity}}/entities';
+import {
+  I{{pascalCase feature}}Repository,
+} from '@/domains/{{dashCase entity}}/usecases/repos';
+import { ILoggerLocal, IUuidGenerator } from '@/shared/protocols';
+
+export interface I{{pascalCase feature}}Usecase {
+  execute(
+    params: I{{pascalCase feature}}Usecase.Params
+  ): Promise<I{{pascalCase feature}}Usecase.Response>;
+}
+
+export namespace I{{pascalCase feature}}Usecase {
+  export type Params = {};
+
+  export type Response = {{pascalCase entity}};
+}
+
+export class {{pascalCase feature}}Usecase implements I{{pascalCase feature}}Usecase {
+  private logger: ILoggerLocal;
+
+  constructor(
+    private readonly {{camelCase feature}}Repository: I{{pascalCase feature}}Repository,
+    private readonly uuidGenerator: IUuidGenerator,
+    logger: ILoggerLocal,
+  ) {
+    this.logger = logger.child({ usecase: '{{dashCase feature}}'});
+  }
+
+  async execute(
+    params: I{{pascalCase feature}}Usecase.Params,
+  ): Promise<I{{pascalCase feature}}Usecase.Response> {
+    this.logger.logDebug({ message: 'Request received', data: params });
+
+    // maybe add business rules here, before the real action...
+
+    const id = this.uuidGenerator.generate();
+
+    const {{camelCase entity}} = new {{pascalCase entity}}({ id });
+
+    this.logger.logDebug({
+      message: '{{pascalCase entity}}',
+      data: {{camelCase entity}},
+    });
+
+    const {{camelCase entity}}Made = await this.{{camelCase feature}}Repository.{{camelCase method}}({{camelCase entity}});
+
+    this.logger.logDebug({
+      message: '{{pascalCase entity}} made',
+      data: {{camelCase entity}}Made,
+    });
+
+    return {{camelCase entity}}Made;
+  }
+}

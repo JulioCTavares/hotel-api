@@ -1,0 +1,12 @@
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+export interface IGet{{pascalCase name}}ByIdRepository {
+  get(
+    id: IGet{{pascalCase name}}ByIdRepository.Params,
+  ): Promise<IGet{{pascalCase name}}ByIdRepository.Result>;
+}
+
+export namespace IGet{{pascalCase name}}ByIdRepository {
+  export type Params = string;
+  export type Result = {{pascalCase name}} | null;
+}

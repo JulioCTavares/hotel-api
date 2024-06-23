@@ -1,0 +1,71 @@
+import {
+  {{pascalCase name}},
+} from '@/domains/{{dashCase name}}/entities';
+import {
+  IGet{{pascalCase name}}ByNameRepository,
+  ISave{{pascalCase name}}Repository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+import {
+  {{pascalCase name}}AlreadyExistsException,
+} from '@/domains/{{dashCase name}}/usecases/exceptions';
+
+import { ILoggerLocal, IUuidGenerator } from '@/shared/protocols';
+
+export interface ICreate{{pascalCase name}}Usecase {
+  execute(
+    params: ICreate{{pascalCase name}}Usecase.Params,
+  ): Promise<ICreate{{pascalCase name}}Usecase.Response>;
+}
+
+export namespace ICreate{{pascalCase name}}Usecase {
+  export type Params = {
+    name: string;
+  };
+
+  export type Response = {{pascalCase name}};
+}
+
+export class Create{{pascalCase name}}Usecase implements ICreate{{pascalCase name}}Usecase {
+  private logger: ILoggerLocal;
+
+  constructor(
+    private readonly get{{pascalCase name}}ByNameRepository: IGet{{pascalCase name}}ByNameRepository,
+    private readonly save{{pascalCase name}}Repository: ISave{{pascalCase name}}Repository,
+    private readonly uuidGenerator: IUuidGenerator,
+    logger: ILoggerLocal
+  ) {
+    this.logger = logger.child({ usecase: 'create-{{dashCase name}}' });
+  }
+
+  async execute(
+    params: ICreate{{pascalCase name}}Usecase.Params,
+  ): Promise<ICreate{{pascalCase name}}Usecase.Response> {
+    this.logger.logDebug({ message: 'Request received', data: params });
+
+    const { name } = params;
+
+    const {{camelCase name}}Exists = await this.get{{pascalCase name}}ByNameRepository.get(name);
+
+    if ({{camelCase name}}Exists) {
+      this.logger.logError({
+        message: '{{pascalCase name}} already exist',
+        data: {{camelCase name}}Exists,
+      });
+
+      throw new {{pascalCase name}}AlreadyExistsException({ name });
+    }
+
+    const id = this.uuidGenerator.generate();
+
+    const {{camelCase name}} = new {{pascalCase name}}({ id, name });
+
+    const {{camelCase name}}Created = await this.save{{pascalCase name}}Repository.save({{camelCase name}});
+
+    this.logger.logDebug({
+      message: '{{pascalCase name}} created',
+      data: {{camelCase name}}Created,
+    });
+
+    return {{camelCase name}}Created;
+  }
+}

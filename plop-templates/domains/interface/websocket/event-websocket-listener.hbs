@@ -1,0 +1,45 @@
+import { {{pascalCase feature}}Controller } from '@/domains/{{dashCase name}}/interface/controllers';
+
+// import { Validation } from '@/shared/interface/validation/protocols';
+import { EventListener } from '@/shared/interface/websocket/protocols';
+import { IEventEmitterService } from '@/shared/interface/websocket/services';
+import { ILoggerLocal } from '@/shared/protocols';
+
+export interface Event{{pascalCase feature}}Props {
+  handshake?: string;
+}
+
+export class Event{{pascalCase feature}}Listener implements EventListener {
+
+  private controller: {{pascalCase feature}}Controller;
+  private logger: ILoggerLocal;
+
+  constructor(
+    socketEventEmmiterService: IEventEmitterService,
+    // validation: Validation,
+    logger: ILoggerLocal
+  ) {
+    this.controller = new {{pascalCase feature}}Controller(
+      socketEventEmmiterService,
+      // validation,
+      logger,
+    );
+
+    this.logger = logger.child({ eventListener: '{{dashCase name}}' });
+  }
+
+  async perform(eventProps: Event{{pascalCase feature}}Props): Promise<void> {
+    this.logger.logDebug({ message: 'Props received', data: eventProps });
+
+    const { handshake } = eventProps;
+
+    try {
+      await this.controller.execute({ handshake });
+
+      this.logger.logInfo({ message: 'Listener complete' });
+    } catch (error) {
+      this.logger.logError({ message: 'Something wrong', data: error });
+      // handle with event errors (or not...)
+    }
+  }
+}

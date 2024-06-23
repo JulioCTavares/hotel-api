@@ -1,0 +1,13 @@
+import { {{pascalCase name}}Filters } from '@/domains/{{dashCase name}}/usecases';
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+export interface IGet{{pascalCase name}}sByFilterRepository {
+  get(
+    params: IGet{{pascalCase name}}sByFilterRepository.Params,
+  ): Promise<IGet{{pascalCase name}}sByFilterRepository.Result>;
+}
+
+export namespace IGet{{pascalCase name}}sByFilterRepository {
+  export type Params = {{pascalCase name}}Filters;
+  export type Result = Array<{{pascalCase name}}>;
+}

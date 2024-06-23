@@ -1,0 +1,142 @@
+import http from 'http';
+import request from 'supertest';
+import { PrismaClient } from '@prisma/client';
+
+import { prismaConnector } from '@/shared/infra/prisma';
+import { HttpStatus } from '@/shared/interface/http/helpers';
+
+import { User } from '@/domains/user/entities';
+
+import { UserFactory } from '@/tests/domains/user/entities';
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+
+import { mockCognitoGetUser } from '@/tests/shared/mocks/aws/cognito';
+import { initAppE2E } from '@/tests/shared/utils';
+
+jest.setTimeout(5000);
+
+jest.mock('aws-sdk', () => {
+  return {
+    CognitoIdentityServiceProvider: class {
+      getUser = mockCognitoGetUser;
+    },
+  };
+});
+
+describe('HttpUpdate{{pascalCase name}}ByIdController (e2e)', () => {
+  let app: http.Server;
+  let authUser: User;
+  let prismaTest: PrismaClient;
+
+  beforeAll(async () => {
+    prismaTest = prismaConnector.connect(process.env.DATABASE_TEST_URL);
+    app = initAppE2E();
+
+        await prismaTest.user.deleteMany({});
+    await prismaTest.{{camelCase name}}.deleteMany({});
+
+    authUser = await prismaTest.user.create({
+      data: UserFactory.build({
+        enabled: true,
+        isAdmin: false,
+      }),
+    });
+
+    mockCognitoGetUser.mockImplementation((params: any, callback: any) => {
+      callback(null, {
+        UserAttributes: [
+          {
+            Name: 'email',
+            Value: authUser.email,
+          },
+        ],
+      });
+    });
+  });
+
+  afterEach(async () => {
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterAll(async () => {
+    if (prismaTest) {
+      await prismaTest.user.deleteMany({});
+      await prismaTest.$disconnect();
+    }
+  });
+
+  describe('With valid parameters', () => {
+    it('PATCH /{{dashCase name}}s/:id', async () => {
+      const {{dashCase name}} = {{pascalCase name}}Factory.build({ enabled: true });
+      await prismaTest.{{camelCase name}}.create({ data: {{dashCase name}} });
+
+      const update{{pascalCase name}}Params = { name: 'New name' };
+
+      const res = await request(app)
+        .patch(`/{{dashCase name}}s/${ {{dashCase name}}.id }`)
+        .send(update{{pascalCase name}}Params)
+        .set('Authorization', 'Bearer any_token');
+
+      expect(res.status).toBe(HttpStatus.OK);
+      expect(res.body.id).toBeDefined();
+      expect(res.body.name).toBe(update{{pascalCase name}}Params.name);
+    });
+  });
+
+  describe('With invalid parameters', () => {
+    it('PATCH /{{dashCase name}}s/:id - Should fail with invalid access token', async () => { 
+      mockCognitoGetUser.mockImplementationOnce((params: any, callback: any) => {
+        callback(new Error("any_error"), null);
+      });
+      
+      const {{dashCase name}} = {{pascalCase name}}Factory.build({ enabled: true });
+      await prismaTest.{{camelCase name}}.create({ data: {{dashCase name}} });
+
+      const update{{pascalCase name}}Params = { name: 'New name' };
+
+      const res = await request(app)
+        .patch(`/{{dashCase name}}s/${ {{dashCase name}}.id }`)
+        .send(update{{pascalCase name}}Params)
+        .set('Authorization', 'Bearer any_token');
+
+      expect(res.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('PATCH /{{dashCase name}}s/:id - Should fail with invalid params', async () => {
+      const {{dashCase name}} = {{pascalCase name}}Factory.build();
+      await prismaTest.{{camelCase name}}.create({ data: {{dashCase name}} });
+
+      const update{{pascalCase name}}Params = { name: 123 };
+
+      const res = await request(app)
+        .patch(`/{{dashCase name}}s/${ {{dashCase name}}.id }`)
+        .send(update{{pascalCase name}}Params)
+        .set('Authorization', 'Bearer any_token');
+
+      expect(res.status).toBe(HttpStatus.BAD_REQUEST);
+    });
+
+    it('PATCH /{{dashCase name}}s/:id - Should fail with not found id', async () => {
+      const {{dashCase name}} = {{pascalCase name}}Factory.build();
+
+      const res = await request(app)
+        .patch(`/{{dashCase name}}s/${ {{dashCase name}}.id }`)
+        .set('Authorization', 'Bearer any_token');
+
+      expect(res.status).toBe(HttpStatus.NOT_FOUND);
+    });
+
+    it('PATCH /{{dashCase name}}s/:id - Should fail with invalid id', async () => {
+      const update{{pascalCase name}}Params = { name: 123 };
+
+      const res = await request(app)
+        .patch('/{{dashCase name}}s/id')
+        .send(update{{pascalCase name}}Params)
+        .set('Authorization', 'Bearer any_token');
+
+      expect(res.status).toBe(HttpStatus.BAD_REQUEST);
+    });
+  });
+});

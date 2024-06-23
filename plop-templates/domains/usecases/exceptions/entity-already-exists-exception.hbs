@@ -1,0 +1,18 @@
+import {
+  DefaultException,
+  ExceptionTypes,
+} from '@/shared/helpers/error-helper';
+
+import {
+  {{pascalCase name}},
+} from '@/domains/{{dashCase name}}/entities';
+
+export class {{pascalCase name}}AlreadyExistsException extends DefaultException {
+  constructor({{camelCase name}}: Partial<{{pascalCase name}}>) {
+    super({
+      type: ExceptionTypes.USER,
+      code: '{{constantCase name}}_ALREADY_EXISTS',
+      data: {{camelCase name}},
+    });
+  }
+}

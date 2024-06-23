@@ -1,0 +1,23 @@
+import {
+  PrismaGet{{pascalCase name}}ByIdRepository,
+} from '@/domains/{{dashCase name}}/infra/prisma/repositories';
+import {
+  makeGet{{pascalCase name}}ByIdValidation,
+} from '@/domains/{{dashCase name}}/interface/validation';
+import {
+  HttpGet{{pascalCase name}}ByIdController,
+} from '@/domains/{{dashCase name}}/interface/http';
+
+import { pinoLoggerLocal } from '@/shared/infra/logs';
+
+export const makeHttpGet{{pascalCase name}}ByIdController = (): HttpGet{{pascalCase name}}ByIdController => {
+  const get{{pascalCase name}}ByIdRepository = new PrismaGet{{pascalCase name}}ByIdRepository();
+  const validation = makeGet{{pascalCase name}}ByIdValidation();
+  const logger = pinoLoggerLocal;
+
+  return new HttpGet{{pascalCase name}}ByIdController(
+    get{{pascalCase name}}ByIdRepository,
+    validation,
+    logger,
+  );
+};

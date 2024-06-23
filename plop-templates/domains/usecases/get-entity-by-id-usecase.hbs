@@ -1,0 +1,43 @@
+import { IGet{{pascalCase name}}ByIdRepository } from '@/domains/{{dashCase name}}/usecases/repos';
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+import { ILoggerLocal } from '@/shared/protocols';
+
+export interface IGet{{pascalCase name}}ByIdUsecase {
+  execute(
+    id: IGet{{pascalCase name}}ByIdUsecase.Params
+  ): Promise<IGet{{pascalCase name}}ByIdUsecase.Result>;
+}
+
+export namespace IGet{{pascalCase name}}ByIdUsecase {
+  export type Params = string;
+  export type Result = {{pascalCase name}} | null;
+}
+
+export class Get{{pascalCase name}}ByIdUsecase implements IGet{{pascalCase name}}ByIdUsecase {
+  private logger: ILoggerLocal;
+
+  constructor(
+    private readonly get{{pascalCase name}}ByIdRepository: IGet{{pascalCase name}}ByIdRepository,
+    logger: ILoggerLocal,
+  ) {
+    this.logger = logger.child({ usecase: 'get-{{dashCase name}}-by-id' });
+  }
+
+  async execute(
+    id: IGet{{pascalCase name}}ByIdUsecase.Params,
+  ): Promise<IGet{{pascalCase name}}ByIdUsecase.Result> {
+    this.logger.logDebug({ message: 'Request received', data: { id } });
+
+    const {{camelCase name}}Exists = await this.get{{pascalCase name}}ByIdRepository.get(id);
+
+    if (!{{camelCase name}}Exists) return null;
+
+    this.logger.logDebug({
+      message: '{{pascalCase name}} found',
+      data: {{camelCase name}}Exists,
+    });
+
+    return {{camelCase name}}Exists;
+  }
+}

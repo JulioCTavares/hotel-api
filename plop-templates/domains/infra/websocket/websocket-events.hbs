@@ -1,0 +1,20 @@
+import { Socket } from 'socket.io';
+
+import { adaptListener } from '@/shared/infra/websocket/adapters';
+
+import {
+  makeEvent{{pascalCase feature}}Listener,
+} from '@/domains/{{dashCase name}}/factories/websocket';
+
+export const {{camelCase name}}EventListeners = (socketClient: Socket) => {
+  socketClient.on('{{dashCase feature}}', adaptListener(makeEvent{{pascalCase feature}}Listener()));
+
+  // you can add listeners as you wish, for example:
+  /* socketClient.on(
+  *    'other-listened-event',
+  *    adaptListener(makeEventAnyOtherListener())
+  *  );
+  */
+};
+
+// ps: this file is reference for files like express/domain-routers

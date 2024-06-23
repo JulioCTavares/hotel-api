@@ -1,0 +1,35 @@
+import { {{pascalCase name}} as {{pascalCase name}}Model, PrismaClient } from '@prisma/client';
+
+import { IUpdate{{pascalCase name}}Repository } from '@/domains/{{dashCase name}}/usecases/repos';
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+import { convertNullToUndefined } from '@/shared/helpers';
+import { prismaConnector, PrismaException } from '@/shared/infra/prisma';
+
+export class PrismaUpdate{{pascalCase name}}Repository
+  implements IUpdate{{pascalCase name}}Repository {
+  private prismaConnection: PrismaClient;
+
+  constructor() {
+    this.prismaConnection = prismaConnector.connect();
+  }
+
+  async update(
+    {{camelCase name}}ToUpdate: IUpdate{{pascalCase name}}Repository.Params,
+  ): Promise<IUpdate{{pascalCase name}}Repository.Result> {
+    try {
+      const { id, ...restOf{{pascalCase name}}Params } = {{camelCase name}}ToUpdate;
+
+      const {{camelCase name}}DTO = await this.prismaConnection.{{camelCase name}}.update({
+        where: { id },
+        data: restOf{{pascalCase name}}Params,
+      });
+
+      const {{camelCase name}} = new {{pascalCase name}}(convertNullToUndefined<{{pascalCase name}}Model>({{camelCase name}}DTO));
+
+      return {{camelCase name}};
+    } catch (error) {
+      throw new PrismaException(error);
+    }
+  }
+}

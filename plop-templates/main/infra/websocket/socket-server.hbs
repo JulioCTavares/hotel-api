@@ -1,0 +1,48 @@
+import http from 'http';
+import { Server } from 'socket.io';
+
+import { pinoLoggerLocal } from '@/main/infra/logs/pino';
+import { addAvailableEvents, SocketException } from '@/main/infra/websocket';
+
+class SocketServer {
+  private client: null | Server = null;
+  private loggerlocal = pinoLoggerLocal;
+
+  create(server: http.Server, options: any): Server {
+    if (this.client !== null) {
+      return this.client;
+    }
+
+    const socketClient = new Server(server, options);
+
+    socketClient.on('connection', (client) => {
+      this.loggerlocal.logInfo({
+        message: `Client connected id: ${client.id}`
+      });
+
+      addAvailableEvents(client);
+    });
+
+    this.client = socketClient;
+
+    return this.client;
+  }
+
+  getClient(): Server {
+    if (this.client) {
+      return this.client;
+    }
+
+    throw new SocketException('Socket instance not defined!');
+  }
+
+  close(): void {
+    if (this.client) {
+      this.client.disconnectSockets();
+    }
+  }
+}
+
+const socketInstance = new SocketServer();
+
+export { socketInstance };

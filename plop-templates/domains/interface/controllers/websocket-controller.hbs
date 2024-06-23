@@ -1,0 +1,47 @@
+import { IEventEmitterService } from '@/shared/interface/websocket/services';
+import { ILoggerLocal } from '@/shared/protocols';
+// import { Validation } from '@/shared/interface/validation/protocols';
+
+type {{pascalCase feature}}Request = {
+  handshake?: string;
+}
+
+type {{pascalCase feature}}Response = void;
+
+export class {{pascalCase feature}}Controller {
+  constructor(
+    private readonly socketEventEmmiterService: IEventEmitterService,
+    // private readonly validation: Validation,
+    private readonly logger: ILoggerLocal
+  ) {
+    this.logger = logger.child({ controller: '{{dashCase name}}' });
+  }
+
+  async execute(props: {{pascalCase feature}}Request): Promise<{{pascalCase feature}}Response> {
+    // Here is a default controller, so
+
+    /* Call validation...
+    *  const hasError = this.validation.validate(props);
+    *  if (hasError) throw new ValidationException(hasError);
+    *  this.logger.logDebug({ message: 'Params Validated' });
+    */
+
+    /* Call usecases...
+    *  const { handshake } = props;
+    *  const result = await this.usecase.execute({ handshake });
+    */
+
+    // or do anything you need...
+
+    const { handshake } = props;
+
+    if (handshake?.toLocaleLowerCase() === 'hello') {
+      await this.socketEventEmmiterService.emit({
+        name: '{{dashCase name}}-response',
+        data: 'World!',
+      });
+    }
+
+    this.logger.logInfo({ message: 'socket event complete', data: props });
+  }
+}

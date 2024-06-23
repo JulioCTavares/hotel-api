@@ -1,0 +1,5 @@
+node_modules
+dist
+migrations
+schema.prisma
+plop-templates

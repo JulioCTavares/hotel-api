@@ -1,0 +1,37 @@
+import { {{pascalCase name}} as {{pascalCase name}}Model, PrismaClient } from '@prisma/client';
+
+import { IGet{{pascalCase name}}ByIdRepository } from '@/domains/{{dashCase name}}/usecases/repos';
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+
+import { convertNullToUndefined } from '@/shared/helpers';
+import { prismaConnector, PrismaException } from '@/shared/infra/prisma';
+
+export class PrismaGet{{pascalCase name}}ByIdRepository
+  implements IGet{{pascalCase name}}ByIdRepository
+{
+  private prismaConnection: PrismaClient;
+
+  constructor() {
+    this.prismaConnection = prismaConnector.connect();
+  }
+
+  async get(
+    id: IGet{{pascalCase name}}ByIdRepository.Params,
+  ): Promise<IGet{{pascalCase name}}ByIdRepository.Result> {
+    try {
+      const {{camelCase name}}DTO = await this.prismaConnection.{{camelCase name}}.findFirst({
+        where: { id, enabled: true },
+      });
+
+      if (!{{camelCase name}}DTO) {
+        return null;
+      }
+
+      const {{camelCase name}} = new {{pascalCase name}}(convertNullToUndefined<{{pascalCase name}}Model>({{camelCase name}}DTO));
+
+      return {{camelCase name}};
+    } catch (error) {
+      throw new PrismaException(error);
+    }
+  }
+}

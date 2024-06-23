@@ -1,0 +1,16 @@
+// Uncomment the next lines if you need
+/*
+* import {
+*   EntityIncludedInto{{pascalCase name}},
+* } from '@/domains/{{dashCase name}}/entities';
+*/
+
+export interface {{pascalCase name}}DefaultPresenter {
+  id: string;
+  name: string;
+  created_at?: Date;
+  updated_at?: Date;
+
+  // association
+  // entity_included?: Array<EntityIncludedInto{{pascalCase name}}>;
+}

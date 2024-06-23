@@ -1,0 +1,63 @@
+import { PrismaCount{{pascalCase name}}sByFilterRepository } from '@/domains/{{dashCase name}}/infra/prisma/repositories';
+import { prismaConnector } from '@/shared/infra/prisma/index';
+
+import { {{pascalCase name}}Factory } from '@/tests/domains/{{dashCase name}}/entities';
+import { PrismaClient } from '@prisma/client';
+
+const makeSut = () => {
+  const sut = new PrismaCount{{pascalCase name}}sByFilterRepository();
+
+  return {
+    sut,
+  };
+}
+
+describe('Prisma Count {{pascalCase name}}s By Filters Repository', () => {
+  let prismaTest: PrismaClient | null = null;
+  beforeAll(async () => {
+    prismaTest = prismaConnector.connect(process.env.DATABASE_TEST_URL);
+
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterEach(async () => {
+    if (prismaTest) {
+      await prismaTest.{{camelCase name}}.deleteMany({});
+    }
+  });
+
+  afterAll(async () => {
+    if (prismaTest) {
+      await prismaTest.$disconnect();
+    }
+  });
+
+  it('should count {{camelCase name}}s by filter', async () => {
+    const { sut } = makeSut();
+
+    for (const name of ['ABCDE', 'abce', 'abcd']) {
+      const fake{{pascalCase name}} = {{pascalCase name}}Factory.build({
+        name,
+        enabled: true,
+      });
+
+      await prismaTest?.{{camelCase name}}.create({
+        data: {
+          ...fake{{pascalCase name}},
+        },
+      });
+    }
+
+    const {{camelCase name}}s = await sut.count({
+      name: 'abc',
+    });
+    expect({{camelCase name}}s).toBe(3);
+
+    const {{camelCase name}}s2 = await sut.count({
+      name: 'abcd',
+    });
+    expect({{camelCase name}}s2).toBe(2);
+  });
+});

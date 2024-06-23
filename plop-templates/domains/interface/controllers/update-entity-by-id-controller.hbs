@@ -1,0 +1,86 @@
+import {
+  Update{{pascalCase name}}ByIdUsecase,
+} from '@/domains/{{dashCase name}}/usecases';
+import {
+  IGet{{pascalCase name}}ByIdRepository,
+  IUpdate{{pascalCase name}}Repository,
+  IGet{{pascalCase name}}ByNameRepository,
+} from '@/domains/{{dashCase name}}/usecases/repos';
+
+import {
+  {{pascalCase name}}DefaultPresenter,
+  {{pascalCase name}}Transformers,
+} from '@/domains/{{dashCase name}}/interface/presenters';
+
+import { ILoggerLocal } from '@/shared/protocols';
+import { ValidationException } from '@/shared/helpers';
+import { Validation } from '@/shared/interface/validation/protocols';
+
+export interface Update{{pascalCase name}}ByIdRequest {
+  id: string;
+  paramsToUpdate: {
+    name?: string;
+  };
+}
+
+export type Update{{pascalCase name}}ByIdResponse = {{pascalCase name}}DefaultPresenter;
+
+export class Update{{pascalCase name}}ByIdController {
+  private usecase: Update{{pascalCase name}}ByIdUsecase;
+  private logger: ILoggerLocal;
+
+  constructor(
+    get{{pascalCase name}}ByIdRepository: IGet{{pascalCase name}}ByIdRepository,
+    get{{pascalCase name}}ByNameRepository: IGet{{pascalCase name}}ByNameRepository,
+    update{{pascalCase name}}Repository: IUpdate{{pascalCase name}}Repository,
+    private readonly validation: Validation,
+    logger: ILoggerLocal,
+  ) {
+    this.usecase = new Update{{pascalCase name}}ByIdUsecase(
+      get{{pascalCase name}}ByIdRepository,
+      get{{pascalCase name}}ByNameRepository,
+      update{{pascalCase name}}Repository,
+      logger,
+    );
+
+    this.logger = logger.child({ controller: 'update-{{dashCase name}}-by-id' });
+  }
+
+  async execute(
+    request: Update{{pascalCase name}}ByIdRequest,
+  ): Promise<Update{{pascalCase name}}ByIdResponse> {
+    this.logger.logDebug({ message: 'Request received', data: request });
+
+    const { id, paramsToUpdate } = request;
+
+    const { name } = paramsToUpdate;
+
+    const hasErrors = this.validation.validate({
+      id,
+      name,
+    });
+
+    if (hasErrors) {
+      throw new ValidationException(hasErrors);
+    }
+
+    this.logger.logDebug({ message: 'Params validated' });
+
+    const {{camelCase name}}Updated = await this.usecase.execute({
+      id,
+      paramsToUpdate: {
+        name,
+      },
+    });
+
+    const {{camelCase name}}UpdatedPresenter =
+      {{pascalCase name}}Transformers.generateDefaultPresenter({{camelCase name}}Updated);
+
+    this.logger.logDebug({
+      message: '{{pascalCase name}} updated',
+      data: {{camelCase name}}UpdatedPresenter,
+    });
+
+    return {{camelCase name}}UpdatedPresenter;
+  }
+}

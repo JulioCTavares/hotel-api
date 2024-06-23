@@ -1,0 +1,19 @@
+import {
+  DefaultException,
+  ExceptionTypes,
+} from '@/shared/helpers/error-helper';
+
+
+import {
+  {{pascalCase name}},
+} from '@/domains/{{dashCase name}}/entities';
+
+export class {{pascalCase name}}NotFoundException extends DefaultException {
+  constructor({{camelCase name}}: Partial<{{pascalCase name}}>) {
+    super({
+      type: ExceptionTypes.USER,
+      code: '{{constantCase name}}_NOT_FOUND',
+      data: {{camelCase name}},
+    });
+  }
+}

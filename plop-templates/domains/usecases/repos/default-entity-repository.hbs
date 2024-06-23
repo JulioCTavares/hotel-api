@@ -1,0 +1,14 @@
+import {
+  {{pascalCase entity}},
+} from '@/domains/{{dashCase entity}}/entities';
+
+export interface I{{pascalCase feature}}Repository {
+  {{method}}(
+    params: I{{pascalCase feature}}Repository.Params
+  ): Promise<I{{pascalCase feature}}Repository.Result>;
+}
+
+export namespace I{{pascalCase feature}}Repository {
+  export type Params = {};
+  export type Result = {{pascalCase entity}} | null;
+}

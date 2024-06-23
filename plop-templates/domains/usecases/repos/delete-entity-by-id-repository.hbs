@@ -1,0 +1,10 @@
+export interface IDelete{{pascalCase name}}ByIdRepository {
+  delete(
+    id: IDelete{{pascalCase name}}ByIdRepository.Params,
+  ): Promise<IDelete{{pascalCase name}}ByIdRepository.Result>;
+}
+
+export namespace IDelete{{pascalCase name}}ByIdRepository {
+  export type Params = string;
+  export type Result = void;
+}

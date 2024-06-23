@@ -1,0 +1,18 @@
+import { {{pascalCase name}} } from '@/domains/{{dashCase name}}/entities';
+import {
+  {{pascalCase name}}DefaultPresenter,
+} from '@/domains/{{dashCase name}}/interface/presenters';
+
+export class {{pascalCase name}}Transformers {
+  static generateDefaultPresenter({{camelCase name}}: {{pascalCase name}}): {{pascalCase name}}DefaultPresenter {
+    return {
+      id: {{camelCase name}}.id,
+      name: {{camelCase name}}.name,
+      created_at: {{camelCase name}}.createdAt,
+      updated_at: {{camelCase name}}.updatedAt,
+
+      // association
+      // inclusion_name: {{camelCase name}}.entityIncluded,
+    };
+  }
+}
