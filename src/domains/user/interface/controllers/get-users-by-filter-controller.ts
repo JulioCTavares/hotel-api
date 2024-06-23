@@ -17,6 +17,7 @@ import {
 import { ILoggerLocal } from '@/shared/protocols'
 
 export interface GetUsersByFilterRequest {
+  name?: string
   email?: string
   birthDate?: Date
   phone?: string
@@ -36,10 +37,10 @@ export interface GetUsersByFilterRequest {
 
 export type GetUsersByFilterResponse =
   | {
-      items: UserDefaultPresenter[]
-      totalItemsListed: number
-      totalItems: number
-    }
+    items: UserDefaultPresenter[]
+    totalItemsListed: number
+    totalItems: number
+  }
   | { totalItems: number }
 
 export class GetUsersByFilterController {
@@ -74,6 +75,7 @@ export class GetUsersByFilterController {
       email,
       birthDate,
       phone,
+      name,
       city,
       state,
       country,

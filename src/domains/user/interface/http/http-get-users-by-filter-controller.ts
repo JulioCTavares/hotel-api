@@ -12,6 +12,7 @@ import { ZodError } from 'zod'
 
 export type HttpGetUsersByFilterRequest = {
   email?: string
+  name?: string
   birthDate?: Date
   phone?: string
   city?: string

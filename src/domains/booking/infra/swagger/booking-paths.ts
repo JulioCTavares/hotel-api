@@ -42,6 +42,34 @@ export const bookingObject = SwaggerTypes.object(true, [
 
 export const bookingPaths = {
   '/bookings': {
+    get: {
+      tags: [bookingTag],
+      summary: 'Get Bookings',
+      produces: ['application/json'],
+      parameters: [
+        ...SwaggerQuery.params([
+          ['roomNumber', SwaggerTypes.integer(true)],
+          ['bookingAmount', SwaggerTypes.integer(true)],
+          ['bookingDate', SwaggerTypes.string(true)],
+          ['startDate', SwaggerTypes.string(true)],
+          ['endDate', SwaggerTypes.string(true)],
+          ['userId', SwaggerTypes.uuid(true)],
+          ['status', SwaggerTypes.enum(true, bookingStatus)],
+        ]),
+        ...defaultFilterParams,
+      ],
+      responses: {
+        ...SwaggerResponse.ok(
+          'Bookings found',
+          SwaggerContents.applicationJson([
+            ['items', SwaggerTypes.array(true, bookingObject, 100)],
+            ['totalItemsListed', SwaggerTypes.integer()],
+            ['totalItems', SwaggerTypes.integer()],
+          ]),
+        ),
+        ...defaultResponses,
+      },
+    },
     post: {
       tags: [bookingTag],
       summary: 'Create a new booking',
@@ -64,6 +92,52 @@ export const bookingPaths = {
             ['status', SwaggerTypes.enum(true, bookingStatus)],
           ]),
         ),
+        ...defaultResponses,
+      },
+    },
+  },
+  '/bookings/{id}': {
+    get: {
+      tags: [bookingTag],
+      summary: 'Get a Booking',
+      produces: ['application/json'],
+      parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      responses: {
+        ...SwaggerResponse.ok(
+          'Booking found',
+          SwaggerContents.applicationJson([], [], bookingObject),
+        ),
+        ...SwaggerResponse.notFound('Booking not found'),
+        ...defaultResponses,
+      },
+    },
+    patch: {
+      tags: [bookingTag],
+      summary: 'Update a Booking by id',
+      produces: ['application/json'],
+      parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      requestBody: {
+        content: SwaggerContents.applicationJson([
+          ['name', SwaggerTypes.string()],
+        ]),
+      },
+      responses: {
+        ...SwaggerResponse.ok(
+          'Booking updated',
+          SwaggerContents.applicationJson([], [], bookingObject),
+        ),
+        ...SwaggerResponse.notFound('Booking not found'),
+        ...defaultResponses,
+      },
+    },
+    delete: {
+      tags: [bookingTag],
+      summary: 'Delete a Booking by id',
+      produces: ['application/json'],
+      parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      responses: {
+        ...SwaggerResponse.noContent(),
+        ...SwaggerResponse.notFound('Booking not found'),
         ...defaultResponses,
       },
     },
