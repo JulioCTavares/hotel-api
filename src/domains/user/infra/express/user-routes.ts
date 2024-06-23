@@ -5,6 +5,7 @@ import {
   makeHttpDeleteUserByIdController,
   makeHttpGetUserByIdController,
   makeHttpGetUsersByFilterController,
+  makeHttpUpdateUserByIdController,
 } from '@/domains/user/factories'
 import { adaptRoute } from '@/shared/infra/express/adapters/express-route-adapter'
 
@@ -18,6 +19,7 @@ userRouter
 userRouter
   .route('/users/:id')
   .get(adaptRoute(makeHttpGetUserByIdController()))
+  .patch(adaptRoute(makeHttpUpdateUserByIdController()))
   .delete(adaptRoute(makeHttpDeleteUserByIdController()))
 
 export { userRouter }
