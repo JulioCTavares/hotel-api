@@ -18,7 +18,7 @@ model User {
   name         String
   email        String    @unique
   password     String
-  birthDate    DateTime?
+  birthDate    DateTime? @map("birth_date")
   phone        String?
   city         String?
   state        String?
