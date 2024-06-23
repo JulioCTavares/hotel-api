@@ -2,10 +2,10 @@ import { SwaggerSchemas } from './swagger-schemas'
 import { SwaggerTypes } from './swagger-types'
 
 export const errorSchema = SwaggerSchemas.create('Error', [
-  ['type', SwaggerTypes.string(true, 'USER')],
-  ['code', SwaggerTypes.string(true, 'USER_NOT_FOUND')],
-  ['data', SwaggerTypes.string(false, 'MissingParamError')],
-  ['message', SwaggerTypes.string(false, 'MissingParamError: Token')],
+  ['type', SwaggerTypes.string(true)],
+  ['code', SwaggerTypes.string(true)],
+  ['data', SwaggerTypes.string(false)],
+  ['message', SwaggerTypes.string(false)],
 ])
 
 const errorContent = {

@@ -6,8 +6,7 @@ import { PrismaFormatter, PrismaException } from '@/shared/infra/prisma'
 import { prismaConnector } from '@/main/infra/prisma'
 
 export class PrismaCountBookingsByFilterRepository
-  implements ICountBookingsByFilterRepository
-{
+  implements ICountBookingsByFilterRepository {
   private prismaConnection: PrismaClient
 
   constructor() {

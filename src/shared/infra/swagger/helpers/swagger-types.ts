@@ -1,20 +1,18 @@
 type required = boolean
 
 export class SwaggerTypes {
-  static string(required: required = false, example: string = 'Teste') {
+  static string(required: required = false) {
     return {
       type: 'string',
       required,
-      example,
     }
   }
 
-  static email(required: required = false, example: string = 'abc@email.com') {
+  static email(required: required = false) {
     return {
       type: 'string',
       format: 'email',
       required,
-      example,
     }
   }
 
@@ -26,15 +24,11 @@ export class SwaggerTypes {
     }
   }
 
-  static uuid(
-    required: required = false,
-    example: string = 'b2b7dcd6-6032-4973-b49e-8926535bcfb4',
-  ) {
+  static uuid(required: required = false) {
     return {
       type: 'string',
       format: 'uuid',
       required,
-      example,
     }
   }
 
@@ -58,11 +52,10 @@ export class SwaggerTypes {
     }
   }
 
-  static boolean(required: required = false, example: boolean = true) {
+  static boolean(required: required = false) {
     return {
       type: 'boolean',
       required,
-      example,
     }
   }
 

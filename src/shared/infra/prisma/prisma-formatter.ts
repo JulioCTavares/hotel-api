@@ -3,7 +3,18 @@ export class PrismaFormatter {
     const filterEntries = Object.entries(filterObject)
 
     const enumTypes: string[] = []
-    const filterdByDate = ['createdAt', 'updatedAt', 'birthDate']
+    const filterdByDate = [
+      'createdAt',
+      'updatedAt',
+      'birthDate',
+      'bookingDate',
+      'startDate',
+      'endDate',
+    ]
+
+    const filterNumeric = [
+      'roomNumber', // Adicione aqui outros campos que deveriam ser numéricos
+    ]
 
     const filterWithouUndefined = filterEntries.filter(
       ([_key, value]) => value !== undefined,
@@ -22,8 +33,16 @@ export class PrismaFormatter {
           return [key, value]
         }
 
+        if (filterNumeric.includes(key)) {
+          const numValue = Number(value)
+          if (!isNaN(numValue)) {
+            return [key, numValue]
+          }
+          return [null, null]
+        }
+
         if (typeof value === 'string' && key !== 'id') {
-          return [key, { contains: value, mode: 'insensitive' }]
+          return [key, { contains: value }]
         }
 
         if (filterdByDate.includes(key)) {
@@ -50,7 +69,7 @@ export class PrismaFormatter {
     )
 
     const filterEntriesTransformedWithouNulls = filterEntriesTransformed.filter(
-      ([_key, value]) => value !== undefined || value !== null,
+      ([_key, value]) => value !== undefined && value !== null,
     )
 
     const filterObjectFormated = Object.fromEntries(

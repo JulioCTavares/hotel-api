@@ -15,7 +15,6 @@ const userObject = SwaggerTypes.object(true, [
   ['id', SwaggerTypes.uuid(true)],
   ['name', SwaggerTypes.string(true)],
   ['email', SwaggerTypes.email(true)],
-  ['password', SwaggerTypes.string(true)],
   ['phone', SwaggerTypes.string(false)],
   ['city', SwaggerTypes.string(false)],
   ['state', SwaggerTypes.string(false)],
@@ -29,7 +28,6 @@ export const userSchema = SwaggerSchemas.create('User', [
   ['id', SwaggerTypes.uuid(true)],
   ['name', SwaggerTypes.string(true)],
   ['email', SwaggerTypes.email(true)],
-  ['password', SwaggerTypes.string(true)],
   ['phone', SwaggerTypes.string(false)],
   ['city', SwaggerTypes.string(false)],
   ['state', SwaggerTypes.string(false)],
@@ -48,7 +46,7 @@ export const userPaths = {
       parameters: [
         ...SwaggerQuery.params([
           ['name', SwaggerTypes.string()],
-          ['email', SwaggerTypes.string()],
+          ['email', SwaggerTypes.email()],
           ['phone', SwaggerTypes.string()],
           ['city', SwaggerTypes.string()],
           ['state', SwaggerTypes.string()],
@@ -76,7 +74,7 @@ export const userPaths = {
       requestBody: {
         content: SwaggerContents.applicationJson([
           ['name', SwaggerTypes.string(true)],
-          ['email', SwaggerTypes.string(true)],
+          ['email', SwaggerTypes.email(true)],
           ['password', SwaggerTypes.string(true)],
           ['phone', SwaggerTypes.string()],
           ['city', SwaggerTypes.string()],
@@ -117,7 +115,7 @@ export const userPaths = {
       requestBody: {
         content: SwaggerContents.applicationJson([
           ['name', SwaggerTypes.string()],
-          ['email', SwaggerTypes.string()],
+          ['email', SwaggerTypes.email()],
           ['password', SwaggerTypes.string()],
           ['phone', SwaggerTypes.string()],
           ['city', SwaggerTypes.string()],

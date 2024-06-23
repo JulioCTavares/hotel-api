@@ -30,14 +30,8 @@ export const authPaths = {
         ...SwaggerResponse.ok(
           'Succesfully Logged',
           SwaggerContents.applicationJson([
-            [
-              'access_token',
-              SwaggerTypes.string(true, 'eyJraWQiOiJoenp3SHBiMEdZZmJOTE9HN0J'),
-            ],
-            [
-              'refresh_token',
-              SwaggerTypes.string(true, 'eyJraWQiOiJoenp3SHBiMEdZZmJOTE9HN0J'),
-            ],
+            ['access_token', SwaggerTypes.string(true)],
+            ['refresh_token', SwaggerTypes.string(true)],
             [
               'authUser',
               SwaggerTypes.object(true, [
@@ -93,20 +87,14 @@ export const authPaths = {
       produces: ['application/json'],
       requestBody: {
         content: SwaggerContents.applicationJson([
-          [
-            'refresh_token',
-            SwaggerTypes.string(true, 'eyJraWQiOiJoenp3SHBiMEdZZmJOTE9HN0J'),
-          ],
+          ['refresh_token', SwaggerTypes.string(true)],
         ]),
       },
       responses: {
         ...SwaggerResponse.ok(
           'Successfully refresh a token',
           SwaggerContents.applicationJson([
-            [
-              'access_token',
-              SwaggerTypes.string(true, 'eyJraWQiOiJoenp3SHBiMEdZZmJOTE9HN0J'),
-            ],
+            ['access_token', SwaggerTypes.string(true)],
           ]),
         ),
         ...defaultResponses,

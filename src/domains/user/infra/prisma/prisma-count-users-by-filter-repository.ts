@@ -4,8 +4,7 @@ import { PrismaException, PrismaFormatter } from '@/shared/infra/prisma'
 import { PrismaClient } from '@prisma/client'
 
 export class PrismaCountUsersByFilterRepository
-  implements ICountUsersByFilterRepository
-{
+  implements ICountUsersByFilterRepository {
   private prismaConnection: PrismaClient
 
   constructor() {
