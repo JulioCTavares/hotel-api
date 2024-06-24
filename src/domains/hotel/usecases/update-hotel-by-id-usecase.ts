@@ -1,6 +1,5 @@
 import {
   IGetHotelByIdRepository,
-  IGetHotelByNameRepository,
   IUpdateHotelRepository,
 } from '@/domains/hotel/usecases/repos'
 import { HotelNotFoundException } from '@/domains/hotel/usecases/exceptions'
@@ -32,7 +31,6 @@ export class UpdateHotelByIdUsecase implements IUpdateHotelByIdUsecase {
 
   constructor(
     private readonly getHotelByIdRepository: IGetHotelByIdRepository,
-    private readonly getHotelByNameRepository: IGetHotelByNameRepository,
     private readonly updateHotelRepository: IUpdateHotelRepository,
     logger: ILoggerLocal,
   ) {
