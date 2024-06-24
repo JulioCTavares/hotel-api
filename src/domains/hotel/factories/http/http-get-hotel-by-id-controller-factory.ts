@@ -1,23 +1,11 @@
-import {
-  PrismaGetHotelByIdRepository,
-} from '@/domains/hotel/infra/prisma/repositories';
-import {
-  makeGetHotelByIdValidation,
-} from '@/domains/hotel/interface/validation';
-import {
-  HttpGetHotelByIdController,
-} from '@/domains/hotel/interface/http';
+import { PrismaGetHotelByIdRepository } from '@/domains/hotel/infra/prisma/repositories'
+import { HttpGetHotelByIdController } from '@/domains/hotel/interface/http'
+import { pinoLoggerLocal } from '@/main/infra/logs'
 
-import { pinoLoggerLocal } from '@/shared/infra/logs';
+export const makeHttpGetHotelByIdController =
+  (): HttpGetHotelByIdController => {
+    const getHotelByIdRepository = new PrismaGetHotelByIdRepository()
+    const logger = pinoLoggerLocal
 
-export const makeHttpGetHotelByIdController = (): HttpGetHotelByIdController => {
-  const getHotelByIdRepository = new PrismaGetHotelByIdRepository();
-  const validation = makeGetHotelByIdValidation();
-  const logger = pinoLoggerLocal;
-
-  return new HttpGetHotelByIdController(
-    getHotelByIdRepository,
-    validation,
-    logger,
-  );
-};
+    return new HttpGetHotelByIdController(getHotelByIdRepository, logger)
+  }
