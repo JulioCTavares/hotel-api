@@ -1,8 +1,8 @@
-import { adaptRoute } from '@/shared/infra/express/adapters';
+import { adaptRoute } from '@/shared/infra/express/adapters'
 
-import { Router } from 'express';
+import { Router } from 'express'
 
-import { authMiddleware } from '@/main/infra/express/middlewares';
+import { authMiddleware } from '@/main/infra/express/middlewares'
 
 import {
   makeHttpCreateHotelController,
@@ -10,28 +10,19 @@ import {
   makeHttpGetHotelByIdController,
   makeHttpGetHotelsByFilterController,
   makeHttpUpdateHotelByIdController,
-} from '@/domains/hotel/factories/http';
+} from '@/domains/hotel/factories/http'
 
-const hotelRouter = Router();
+const hotelRouter = Router()
 
 hotelRouter
   .route('/hotels')
-  .post(authMiddleware('USER'), adaptRoute(makeHttpCreateHotelController()))
-  .get(
-    authMiddleware('USER'),
-    adaptRoute(makeHttpGetHotelsByFilterController())
-  );
+  .post(authMiddleware(), adaptRoute(makeHttpCreateHotelController()))
+  .get(authMiddleware(), adaptRoute(makeHttpGetHotelsByFilterController()))
 
 hotelRouter
   .route('/hotels/:id')
-  .get(authMiddleware('USER'), adaptRoute(makeHttpGetHotelByIdController()))
-  .patch(
-    authMiddleware('USER'),
-    adaptRoute(makeHttpUpdateHotelByIdController())
-  )
-  .delete(
-    authMiddleware('USER'),
-    adaptRoute(makeHttpDeleteHotelByIdController())
-  );
+  .get(authMiddleware(), adaptRoute(makeHttpGetHotelByIdController()))
+  .patch(authMiddleware(), adaptRoute(makeHttpUpdateHotelByIdController()))
+  .delete(authMiddleware(), adaptRoute(makeHttpDeleteHotelByIdController()))
 
-export { hotelRouter };
+export { hotelRouter }
