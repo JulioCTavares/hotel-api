@@ -16,6 +16,7 @@ export type BookingFilters = {
     startDate?: Date
     endDate?: Date
     userId?: string
+    hotelId?: string
     status?: BookingStatus
     createdAt?: DateFilter
     updatedAt?: DateFilter

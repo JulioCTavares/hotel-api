@@ -4,6 +4,7 @@ import {
   HttpResponse,
 } from '@/shared/interface/http/protocols'
 import { AccessTokenValidatorAdapter } from '../../jwt'
+import { UnauthorizedException } from '@/domains/auth/usecase/exceptions'
 
 class HttpGetAuthUserByTokenController implements Middleware {
   private readonly accessTokenValidator: AccessTokenValidatorAdapter
@@ -21,19 +22,13 @@ class HttpGetAuthUserByTokenController implements Middleware {
           : null
 
       if (!access_token) {
-        return {
-          statusCode: 401,
-          body: { message: 'Token não fornecido' },
-        }
+        throw new UnauthorizedException()
       }
 
       const authUser = this.accessTokenValidator.validate(access_token)
 
       if (!authUser) {
-        return {
-          statusCode: 401,
-          body: { message: 'Token inválido' },
-        }
+        throw new UnauthorizedException('Invalid token')
       }
 
       return {

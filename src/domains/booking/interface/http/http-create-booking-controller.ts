@@ -20,6 +20,7 @@ export interface HttpCreateBookingRequest {
   endDate: Date
   status: BookingStatus
   userId: string
+  hotelId?: string
 }
 
 export class HttpCreateBookingController implements HttpController {

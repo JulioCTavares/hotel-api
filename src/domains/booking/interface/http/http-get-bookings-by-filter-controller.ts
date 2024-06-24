@@ -17,6 +17,7 @@ export type HttpGetBookingsByFilterRequest = {
   startDate?: Date
   endDate?: Date
   userId?: string
+  hotelId?: string
   status?: BookingStatus
   created_at?: DateFilter
   updated_at?: DateFilter

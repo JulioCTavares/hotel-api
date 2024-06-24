@@ -21,6 +21,7 @@ export interface UpdateBookingByIdRequest {
     startDate?: Date
     endDate?: Date
     userId?: string
+    hotelId?: string
     status?: BookingStatus
   }
 }

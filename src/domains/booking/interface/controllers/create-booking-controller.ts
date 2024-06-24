@@ -16,6 +16,7 @@ export interface CreateBookingRequest {
   endDate: Date
   status: BookingStatus
   userId: string
+  hotelId?: string
 }
 
 export type CreateBookingResponse = BookingDefaultPresenter

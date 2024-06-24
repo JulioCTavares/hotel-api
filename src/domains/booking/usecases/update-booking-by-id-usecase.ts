@@ -23,6 +23,7 @@ export namespace IUpdateBookingByIdUsecase {
       startDate?: Date
       endDate?: Date
       userId?: string
+      hotelId?: string
       status?: BookingStatus
     }
   }

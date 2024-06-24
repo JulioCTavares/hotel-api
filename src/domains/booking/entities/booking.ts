@@ -14,6 +14,7 @@ export type BookingConstructorParams = {
   endDate: Date
   status: BookingStatus
   userId: string
+  hotelId?: string
   createdAt?: Date
   updatedAt?: Date
 }
@@ -26,6 +27,7 @@ export class Booking {
   startDate: Date
   endDate: Date
   userId: string
+  hotelId?: string
   status: BookingStatus
   createdAt?: Date
   updatedAt?: Date
@@ -40,6 +42,7 @@ export class Booking {
       endDate,
       status,
       userId,
+      hotelId,
       createdAt,
       updatedAt,
     } = bookingParams
@@ -52,6 +55,7 @@ export class Booking {
     this.endDate = endDate
     this.status = status
     this.userId = userId
+    this.hotelId = hotelId
     this.createdAt = createdAt
     this.updatedAt = updatedAt
 
