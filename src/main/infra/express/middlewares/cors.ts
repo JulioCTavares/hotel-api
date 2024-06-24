@@ -1,18 +1,9 @@
 import { env } from '@/config'
 import cors from 'cors'
 
-const {
-  NODE_ENV,
-  FRONT_PROD_URL,
-  FRONT_STAGE_URL,
-  PROD_DEPLOY_URL,
-  STAGE_DEPLOY_URL,
-} = env
+const { NODE_ENV, FRONT_URL, DEPLOY_URL } = env
 
-const permitedUrls =
-  NODE_ENV === 'production'
-    ? [PROD_DEPLOY_URL, FRONT_PROD_URL]
-    : [STAGE_DEPLOY_URL, FRONT_STAGE_URL]
+const permitedUrls = NODE_ENV === 'production' ?? [FRONT_URL, DEPLOY_URL]
 
 const options = NODE_ENV === 'dev' ? {} : { origin: permitedUrls }
 

@@ -1,7 +1,7 @@
 import { env } from '@/config'
 
 const protocolMap = ['http', 'https']
-const urlMap = [`localhost:${env.PORT}`, env.STAGE_DEPLOY_URL]
+const urlMap = [`localhost:${env.PORT}`, env.DEPLOY_URL]
 
 const protocol = env.NODE_ENV === 'local' ? protocolMap[0] : protocolMap[1]
 

@@ -2,12 +2,13 @@ import 'dotenv/config'
 import { z } from 'zod'
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(['local', 'dev', 'test', 'production']).default('dev'),
+  NODE_ENV: z
+    .enum(['local', 'dev', 'test', 'production'])
+    .default('local')
+    .optional(),
   PORT: z.coerce.number().default(3000),
-  FRONT_PROD_URL: z.string(),
-  FRONT_STAGE_URL: z.string(),
-  STAGE_DEPLOY_URL: z.string(),
-  PROD_DEPLOY_URL: z.string(),
+  FRONT_URL: z.string().optional(),
+  DEPLOY_URL: z.string().optional(),
   DATABASE_URL: z.string(),
   DATABASE_USERNAME: z.string(),
   DATABASE_PASSWORD: z.string(),

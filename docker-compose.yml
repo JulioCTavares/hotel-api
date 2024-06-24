@@ -1,5 +1,8 @@
 services:
   hotel_db:
+    profiles:
+      - db-only
+      - local
     image: mcr.microsoft.com/mssql/server:2019-latest
     hostname: hotel-db
     restart: unless-stopped
@@ -13,6 +16,8 @@ services:
       - sqlserver-data:/var/opt/mssql
 
   hotel_api:
+    profiles:
+      - local
     build:
       context: .
       dockerfile: Dockerfile
