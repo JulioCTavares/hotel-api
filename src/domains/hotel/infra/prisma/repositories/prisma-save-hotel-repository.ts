@@ -1,33 +1,30 @@
-import { Hotel as HotelModel, PrismaClient } from '@prisma/client';
+import { ISaveHotelRepository } from '@/domains/hotel/usecases/repos'
 
-import { ISaveHotelRepository } from '@/domains/hotel/usecases/repos';
-import { Hotel } from '@/domains/hotel/entities';
-
-import { convertNullToUndefined } from '@/shared/helpers';
-import { prismaConnector, PrismaException } from '@/shared/infra/prisma';
+import { PrismaException } from '@/shared/infra/prisma'
+import { prismaConnector } from '@/main/infra/prisma'
+import { PrismaHotelMapper } from '../mapper'
+import { PrismaClient } from '@prisma/client'
 
 export class PrismaSaveHotelRepository implements ISaveHotelRepository {
-  private prismaConnection: PrismaClient;
+  private prismaConnection: PrismaClient
 
   constructor() {
-    this.prismaConnection = prismaConnector.connect();
+    this.prismaConnection = prismaConnector.connect()
   }
 
   async save(
     hotelParams: ISaveHotelRepository.Params,
   ): Promise<ISaveHotelRepository.Result> {
     try {
-      const { ...restHotelParams } = hotelParams;
+      const { ...restHotelParams } = hotelParams
 
-      const hotelDTO = await this.prismaConnection.hotel.create({
+      const hotel = await this.prismaConnection.hotel.create({
         data: restHotelParams,
-      });
+      })
 
-      const hotel = new Hotel(convertNullToUndefined<HotelModel>(hotelDTO));
-
-      return hotel;
+      return PrismaHotelMapper.toDomain(hotel)
     } catch (error) {
-      throw new PrismaException(error);
+      throw new PrismaException(error)
     }
   }
 }

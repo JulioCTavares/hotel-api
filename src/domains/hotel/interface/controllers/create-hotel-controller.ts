@@ -1,73 +1,75 @@
-import {
-  CreateHotelUsecase,
-} from '@/domains/hotel/usecases';
-import {
-  ISaveHotelRepository,
-  IGetHotelByNameRepository,
-} from '@/domains/hotel/usecases/repos';
+import { CreateHotelUsecase } from '@/domains/hotel/usecases'
+import { ISaveHotelRepository } from '@/domains/hotel/usecases/repos'
 import {
   HotelDefaultPresenter,
   HotelTransformers,
-} from '@/domains/hotel/interface/presenters';
+} from '@/domains/hotel/interface/presenters'
 
-import { ValidationException } from '@/shared/helpers';
-import { ILoggerLocal, IUuidGenerator } from '@/shared/protocols';
-import { Validation } from '@/shared/interface/validation/protocols';
+import { ILoggerLocal, IUuidGenerator } from '@/shared/protocols'
+import { z } from 'zod'
 
 export interface CreateHotelRequest {
-  name: string;
+  name: string
+  city: string
+  state: string
+  country: string
 }
 
-export type CreateHotelResponse = HotelDefaultPresenter;
+export type CreateHotelResponse = HotelDefaultPresenter
+
+const createHotelSchema = z.object({
+  name: z.string({
+    invalid_type_error: 'name should be a string',
+    required_error: 'name is required',
+  }),
+  city: z.string({
+    invalid_type_error: 'city should be a string',
+    required_error: 'city is required',
+  }),
+  state: z.string({
+    invalid_type_error: 'state should be a string',
+    required_error: 'state is required',
+  }),
+  country: z.string({
+    invalid_type_error: 'country should be a string',
+    required_error: 'country is required',
+  }),
+})
 
 export class CreateHotelController {
-  private usecase: CreateHotelUsecase;
-  private logger: ILoggerLocal;
+  private usecase: CreateHotelUsecase
+  private logger: ILoggerLocal
 
   constructor(
-    getHotelByNameRepository: IGetHotelByNameRepository,
     saveHotelRepository: ISaveHotelRepository,
     uuidGenerator: IUuidGenerator,
-    private readonly validation: Validation,
     logger: ILoggerLocal,
   ) {
     this.usecase = new CreateHotelUsecase(
-      getHotelByNameRepository,
       saveHotelRepository,
       uuidGenerator,
-      logger
-    );
+      logger,
+    )
 
-    this.logger = logger.child({ controller: 'create-hotel' });
+    this.logger = logger.child({ controller: 'create-hotel' })
   }
 
-  async execute(
-    request: CreateHotelRequest
-  ): Promise<CreateHotelResponse> {
-    this.logger.logDebug({ message: 'Request received', data: request });
+  async execute(request: CreateHotelRequest): Promise<CreateHotelResponse> {
+    this.logger.logDebug({ message: 'Request received', data: request })
 
-    const { name } = request;
+    const validatedRequest = createHotelSchema.parse(request)
+    this.logger.logDebug({ message: 'Params validated' })
 
-    const hasError = this.validation.validate({
-      name,
-    });
-
-    if (hasError) {
-      throw new ValidationException(hasError);
-    }
-
-    this.logger.logDebug({ message: 'Params validated' });
-
-    const hotelCreated = await this.usecase.execute({ name });
+    const hotelCreated = await this.usecase.execute(validatedRequest)
 
     const hotelCreatedPresenter =
-      HotelTransformers.generateDefaultPresenter(hotelCreated);
+      HotelTransformers.generateDefaultPresenter(hotelCreated)
 
     this.logger.logDebug({
       message: 'Hotel created',
       data: hotelCreatedPresenter,
-    });
+    })
 
-    return hotelCreatedPresenter;
+    return hotelCreatedPresenter
   }
 }

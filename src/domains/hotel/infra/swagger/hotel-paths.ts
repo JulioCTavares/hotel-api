@@ -8,33 +8,29 @@ import {
   defaultFilterParams,
   defaultResponses,
   SwaggerResponse,
-} from '@/shared/infra/swagger/helpers';
+} from '@/shared/infra/swagger/helpers'
 
-export const hotelTag = 'Hotel';
-
-// Uncomment the next lines if you need
-/*
-* export const entityIncludedIntoHotelObject = SwaggerTypes.object(false, [
-*   ['id', SwaggerTypes.uuid(true)],
-*   ['name', SwaggerTypes.string(true)],
-* ]);
-*/
+export const hotelTag = 'Hotel'
 
 export const hotelSchema = SwaggerSchemas.create('Hotel', [
   ['id', SwaggerTypes.uuid(true)],
   ['name', SwaggerTypes.string(true)],
-  // ['included_entity_name', SwaggerTypes.array(false, entityIncludedIntoHotelObject, 100)],
+  ['city', SwaggerTypes.string(true)],
+  ['state', SwaggerTypes.string(true)],
+  ['country', SwaggerTypes.string(true)],
   ['created_at', SwaggerTypes.dateTime(true)],
   ['updated_at', SwaggerTypes.dateTime(true)],
-]);
+])
 
 export const hotelObject = SwaggerTypes.object(true, [
   ['id', SwaggerTypes.uuid(true)],
   ['name', SwaggerTypes.string(true)],
-  // ['included_entity_name', SwaggerTypes.array(false, entityIncludedIntoHotelObject, 100)],
+  ['city', SwaggerTypes.string(true)],
+  ['state', SwaggerTypes.string(true)],
+  ['country', SwaggerTypes.string(true)],
   ['created_at', SwaggerTypes.dateTime(true)],
   ['updated_at', SwaggerTypes.dateTime(true)],
-]);
+])
 
 export const hotelPaths = {
   '/hotels': {
@@ -43,9 +39,7 @@ export const hotelPaths = {
       summary: 'Get Hotels',
       produces: ['application/json'],
       parameters: [
-        ...SwaggerQuery.params([
-          ['name', SwaggerTypes.string()],
-        ]),
+        ...SwaggerQuery.params([['name', SwaggerTypes.string()]]),
         ...defaultFilterParams,
       ],
       security,
@@ -66,17 +60,30 @@ export const hotelPaths = {
       summary: 'Create a new hotel',
       produces: ['application/json'],
       requestBody: {
-        content: SwaggerContents.applicationJson(
-          [
-            ['name', SwaggerTypes.string(true)],
-          ],
-        ),
+        content: SwaggerContents.applicationJson([
+          ['name', SwaggerTypes.string(true)],
+          ['city', SwaggerTypes.string(true)],
+          ['state', SwaggerTypes.string(true)],
+          ['country', SwaggerTypes.string(true)],
+        ]),
       },
       security,
       responses: {
         ...SwaggerResponse.created(
           'Hotel created',
-          SwaggerContents.applicationJson([], [], hotelObject)
+          SwaggerContents.applicationJson(
+            [
+              ['id', SwaggerTypes.uuid()],
+              ['name', SwaggerTypes.string()],
+              ['city', SwaggerTypes.string()],
+              ['state', SwaggerTypes.string()],
+              ['country', SwaggerTypes.string()],
+              ['created_at', SwaggerTypes.dateTime()],
+              ['updated_at', SwaggerTypes.dateTime()],
+            ],
+            [],
+            hotelObject,
+          ),
         ),
         ...defaultResponses,
       },
@@ -92,7 +99,7 @@ export const hotelPaths = {
       responses: {
         ...SwaggerResponse.ok(
           'Hotel found',
-          SwaggerContents.applicationJson([], [], hotelObject)
+          SwaggerContents.applicationJson([], [], hotelObject),
         ),
         ...SwaggerResponse.notFound('Hotel not found'),
         ...defaultResponses,
@@ -104,17 +111,27 @@ export const hotelPaths = {
       produces: ['application/json'],
       parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
       requestBody: {
-        content: SwaggerContents.applicationJson(
-          [
-            ['name', SwaggerTypes.string()],
-          ],
-        ),
+        content: SwaggerContents.applicationJson([
+          ['name', SwaggerTypes.string()],
+        ]),
       },
       security,
       responses: {
         ...SwaggerResponse.ok(
           'Hotel updated',
-          SwaggerContents.applicationJson([], [], hotelObject),
+          SwaggerContents.applicationJson(
+            [
+              ['id', SwaggerTypes.uuid()],
+              ['name', SwaggerTypes.string()],
+              ['city', SwaggerTypes.string()],
+              ['state', SwaggerTypes.string()],
+              ['country', SwaggerTypes.string()],
+              ['created_at', SwaggerTypes.dateTime()],
+              ['updated_at', SwaggerTypes.dateTime()],
+            ],
+            [],
+            hotelObject,
+          ),
         ),
         ...SwaggerResponse.notFound('Hotel not found'),
         ...defaultResponses,
@@ -133,4 +150,4 @@ export const hotelPaths = {
       },
     },
   },
-};
+}
