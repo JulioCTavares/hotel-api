@@ -14,7 +14,11 @@ class HttpGetAuthUserByTokenController implements Middleware {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const { authorization: access_token } = httpRequest.headers
+      const authHeader = httpRequest.headers.authorization
+      const access_token =
+        authHeader && authHeader.startsWith('Bearer ')
+          ? authHeader.split(' ')[1]
+          : null
 
       if (!access_token) {
         return {

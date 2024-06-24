@@ -8,18 +8,19 @@ import {
   makeHttpUpdateUserByIdController,
 } from '@/domains/user/factories'
 import { adaptRoute } from '@/shared/infra/express/adapters/express-route-adapter'
+import { authMiddleware } from '@/main/infra/express/middlewares'
 
 const userRouter = Router()
 
 userRouter
   .route('/users')
   .post(adaptRoute(makeHttpCreateUserController()))
-  .get(adaptRoute(makeHttpGetUsersByFilterController()))
+  .get(authMiddleware(), adaptRoute(makeHttpGetUsersByFilterController()))
 
 userRouter
   .route('/users/:id')
-  .get(adaptRoute(makeHttpGetUserByIdController()))
-  .patch(adaptRoute(makeHttpUpdateUserByIdController()))
-  .delete(adaptRoute(makeHttpDeleteUserByIdController()))
+  .get(authMiddleware(), adaptRoute(makeHttpGetUserByIdController()))
+  .patch(authMiddleware(), adaptRoute(makeHttpUpdateUserByIdController()))
+  .delete(authMiddleware(), adaptRoute(makeHttpDeleteUserByIdController()))
 
 export { userRouter }

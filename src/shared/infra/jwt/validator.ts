@@ -9,7 +9,6 @@ export class AccessTokenValidatorAdapter implements IAccessTokenValidator {
       const decoded = jwt.verify(token, env.JWT_SECRET) as jwt.JwtPayload
       return {
         id: decoded.userId,
-        email: decoded.email,
       } as AuthUser
     } catch (error) {
       return null

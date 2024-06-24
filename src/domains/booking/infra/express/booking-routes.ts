@@ -8,18 +8,19 @@ import {
   makeHttpUpdateBookingByIdController,
 } from '@/domains/booking/factories'
 import { adaptRoute } from '@/shared/infra/express/adapters'
+import { authMiddleware } from '@/main/infra/express/middlewares'
 
 const bookingRouter = Router()
 
 bookingRouter
   .route('/bookings')
-  .post(adaptRoute(makeHttpCreateBookingController()))
-  .get(adaptRoute(makeHttpGetBookingsByFilterController()))
+  .post(authMiddleware(), adaptRoute(makeHttpCreateBookingController()))
+  .get(authMiddleware(), adaptRoute(makeHttpGetBookingsByFilterController()))
 
 bookingRouter
   .route('/bookings/:id')
-  .get(adaptRoute(makeHttpGetBookingByIdController()))
-  .patch(adaptRoute(makeHttpUpdateBookingByIdController()))
-  .delete(adaptRoute(makeHttpDeleteBookingByIdController()))
+  .get(authMiddleware(), adaptRoute(makeHttpGetBookingByIdController()))
+  .patch(authMiddleware(), adaptRoute(makeHttpUpdateBookingByIdController()))
+  .delete(authMiddleware(), adaptRoute(makeHttpDeleteBookingByIdController()))
 
 export { bookingRouter }

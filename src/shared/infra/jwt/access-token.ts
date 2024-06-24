@@ -8,7 +8,6 @@ export class AccessTokenGeneratorAdapter implements IAccessTokenGenerator {
     return jwt.sign(
       {
         userId: authUser.id,
-        email: authUser.email,
       },
       env.JWT_SECRET,
       { expiresIn: env.JWT_EXPIRATION },
