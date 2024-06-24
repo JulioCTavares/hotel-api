@@ -1,57 +1,52 @@
 import {
   IGetHotelsByFilterRepository,
   ICountHotelsByFilterRepository,
-} from '@/domains/hotel/usecases/repos';
-import {
-  GetHotelsByFilterController,
-} from '@/domains/hotel/interface/controllers';
+} from '@/domains/hotel/usecases/repos'
+import { GetHotelsByFilterController } from '@/domains/hotel/interface/controllers'
 
-import {
-  HttpResponse,
-  HttpController,
-} from '@/shared/interface/http/protocols';
-import { ILoggerLocal } from '@/shared/protocols';
-import { Validation } from '@/shared/interface/validation/protocols';
-import { badRequest, ok, serverError } from '@/shared/interface/http/helpers';
-import { DateFilter, OrderByMode, ValidationException } from '@/shared/helpers';
+import { HttpResponse, HttpController } from '@/shared/interface/http/protocols'
+import { ILoggerLocal } from '@/shared/protocols'
+import { badRequest, ok, serverError } from '@/shared/interface/http/helpers'
+import { DateFilter, OrderByMode, ValidationException } from '@/shared/helpers'
 
 export type HttpGetHotelsByFilterRequest = {
-  name?: string;
-  created_at?: DateFilter;
-  updated_at?: DateFilter;
+  name?: string
+  city?: string
+  state?: string
+  country?: string
+  created_at?: DateFilter
+  updated_at?: DateFilter
   order_by: {
-    property?: string;
-    mode?: OrderByMode;
-  };
-  take?: number;
-  skip?: number;
-  count?: boolean;
-};
+    property?: string
+    mode?: OrderByMode
+  }
+  take?: number
+  skip?: number
+  count?: boolean
+}
 
 export class HttpGetHotelsByFilterController implements HttpController {
-  private controller: GetHotelsByFilterController;
-  private logger: ILoggerLocal;
+  private controller: GetHotelsByFilterController
+  private logger: ILoggerLocal
 
   constructor(
     getHotelsByFilterRepository: IGetHotelsByFilterRepository,
     countHotelsByFilterRepository: ICountHotelsByFilterRepository,
-    validation: Validation,
     logger: ILoggerLocal,
   ) {
     this.controller = new GetHotelsByFilterController(
       getHotelsByFilterRepository,
       countHotelsByFilterRepository,
-      validation,
       logger,
-    );
+    )
 
-    this.logger = logger.child({ httpController: 'get-hotels-by-filter' });
+    this.logger = logger.child({ httpController: 'get-hotels-by-filter' })
   }
 
   async handle(
     httpRequest: HttpGetHotelsByFilterRequest,
   ): Promise<HttpResponse> {
-    this.logger.logDebug({ message: 'Request Received', data: httpRequest });
+    this.logger.logDebug({ message: 'Request Received', data: httpRequest })
 
     const {
       name,
@@ -61,7 +56,7 @@ export class HttpGetHotelsByFilterController implements HttpController {
       take,
       skip,
       count,
-    } = httpRequest;
+    } = httpRequest
 
     try {
       const hotels = await this.controller.execute({
@@ -72,17 +67,17 @@ export class HttpGetHotelsByFilterController implements HttpController {
         take,
         skip,
         count,
-      });
+      })
 
-      this.logger.logDebug({ message: 'Hotels found' });
+      this.logger.logDebug({ message: 'Hotels found' })
 
-      return ok(hotels);
+      return ok(hotels)
     } catch (error) {
       if (error instanceof ValidationException) {
-        return badRequest(error);
+        return badRequest(error)
       }
 
-      return serverError(error as Error);
+      return serverError(error as Error)
     }
   }
 }
