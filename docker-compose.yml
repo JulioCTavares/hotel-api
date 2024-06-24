@@ -11,8 +11,6 @@ services:
       MSSQL_PID: "Developer"
     volumes:
       - sqlserver-data:/var/opt/mssql
-    networks:
-      - sqlserver-network
 
   hotel_api:
     build:
@@ -28,10 +26,6 @@ services:
       - ./src:/home/node/src
     depends_on:
       - hotel_db
-
-networks:
-  sqlserver-network:
-    driver: bridge
 
 volumes:
   sqlserver-data:
