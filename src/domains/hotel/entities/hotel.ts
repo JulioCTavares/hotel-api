@@ -1,51 +1,33 @@
-// Uncomment the next lines if you need
-/*
-* import {
-*   EntityIncludedIntoHotel,
-* } from '@/domains/hotel/entities';
-*/
-
 export type HotelConstructorParams = {
-  id: string;
-  name: string;
-  enabled?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-
-  // association
-  // inclusionName: Array<EntityIncludedIntoHotel>;
+  id: string
+  name: string
+  city: string
+  state: string
+  country: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export class Hotel {
-  id: string;
-  name: string;
-  enabled?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-
-  // association
-  // inclusionName: Array<EntityIncludedIntoHotel>;
+  id: string
+  name: string
+  city: string
+  state: string
+  country: string
+  createdAt?: Date
+  updatedAt?: Date
 
   constructor(hotelParams: HotelConstructorParams) {
-    const {
-      id,
-      name,
-      enabled,
-      createdAt,
-      updatedAt,
+    const { id, name, city, state, country, createdAt, updatedAt } = hotelParams
 
-      // association
-      // inclusionName,
-    } = hotelParams;
+    this.id = id
+    this.name = name
+    this.city = city
+    this.state = state
+    this.country = country
+    this.createdAt = createdAt
+    this.updatedAt = updatedAt
 
-    this.id = id;
-    this.name = name;
-    this.enabled = enabled ?? true;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
-
-    // this.inclusionName = inclusionName;
-
-    Object.freeze(this);
+    Object.freeze(this)
   }
 }

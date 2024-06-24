@@ -1,2 +1,1 @@
-export * from './hotel';
-// export * from './hotel-inclusions';
+export * from './hotel'
