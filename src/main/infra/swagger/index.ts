@@ -9,7 +9,11 @@ import {
   bookingTag,
 } from '@/domains/booking/infra/swagger'
 import { userPaths, userTag, userSchema } from '@/domains/user/infra/swagger'
-import { errorSchema, servers } from '@/shared/infra/swagger/helpers'
+import {
+  errorSchema,
+  securitySchemes,
+  servers,
+} from '@/shared/infra/swagger/helpers'
 
 const tags = [userTag, bookingTag, authTag]
 
@@ -38,6 +42,7 @@ export default {
     ...authPaths,
   },
   components: {
+    securitySchemes,
     schemas,
   },
 }

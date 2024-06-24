@@ -9,9 +9,8 @@ import {
 export const authTag = 'Auth'
 
 export const authUserSchema = SwaggerSchemas.create('AuthUser', [
-  ['id', SwaggerTypes.uuid(true)],
-  ['name', SwaggerTypes.string(true)],
   ['email', SwaggerTypes.email(true)],
+  ['password', SwaggerTypes.string(true)],
 ])
 
 export const authPaths = {
@@ -35,66 +34,11 @@ export const authPaths = {
             [
               'authUser',
               SwaggerTypes.object(true, [
-                ['id', SwaggerTypes.uuid(true)],
-                ['name', SwaggerTypes.string(true)],
-                ['email', SwaggerTypes.email(true)],
+                ['id', SwaggerTypes.uuid()],
+                ['name', SwaggerTypes.string()],
+                ['email', SwaggerTypes.email()],
               ]),
             ],
-          ]),
-        ),
-        ...defaultResponses,
-      },
-    },
-  },
-  '/auth/forgot-password': {
-    post: {
-      tags: ['Auth'],
-      summary: 'Forgot Password',
-      produces: ['application/json'],
-      requestBody: {
-        content: SwaggerContents.applicationJson([
-          ['email', SwaggerTypes.email(true)],
-        ]),
-      },
-      responses: {
-        ...SwaggerResponse.ok('Successfully forgot password'),
-        ...defaultResponses,
-      },
-    },
-  },
-  '/auth/confirm-forgot-password': {
-    post: {
-      tags: ['Auth'],
-      summary: 'Confirm Forgot Password',
-      produces: ['application/json'],
-      requestBody: {
-        content: SwaggerContents.applicationJson([
-          ['email', SwaggerTypes.email(true)],
-          ['new_password', SwaggerTypes.password(true)],
-          ['verification_code', SwaggerTypes.password(true)],
-        ]),
-      },
-      responses: {
-        ...SwaggerResponse.ok('Successfully confirm forgot password'),
-        ...defaultResponses,
-      },
-    },
-  },
-  '/auth/refresh-token': {
-    post: {
-      tags: ['Auth'],
-      summary: 'Get a refresh token',
-      produces: ['application/json'],
-      requestBody: {
-        content: SwaggerContents.applicationJson([
-          ['refresh_token', SwaggerTypes.string(true)],
-        ]),
-      },
-      responses: {
-        ...SwaggerResponse.ok(
-          'Successfully refresh a token',
-          SwaggerContents.applicationJson([
-            ['access_token', SwaggerTypes.string(true)],
           ]),
         ),
         ...defaultResponses,

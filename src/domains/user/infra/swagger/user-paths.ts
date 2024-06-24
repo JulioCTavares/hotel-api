@@ -7,6 +7,7 @@ import {
   defaultFilterParams,
   defaultResponses,
   SwaggerResponse,
+  security,
 } from '@/shared/infra/swagger/helpers'
 
 export const userTag = 'Users'
@@ -55,6 +56,7 @@ export const userPaths = {
         ]),
         ...defaultFilterParams,
       ],
+      security,
       responses: {
         ...SwaggerResponse.ok(
           'Users found',
@@ -81,12 +83,27 @@ export const userPaths = {
           ['state', SwaggerTypes.string()],
           ['country', SwaggerTypes.string()],
           ['birthDate', SwaggerTypes.dateTime()],
+          ['created_at', SwaggerTypes.dateTime(true)],
+          ['updated_at', SwaggerTypes.dateTime(true)],
         ]),
       },
       responses: {
         ...SwaggerResponse.created(
           'User created',
-          SwaggerContents.applicationJson([], [], userObject),
+          SwaggerContents.applicationJson(
+            [
+              ['id', SwaggerTypes.uuid()],
+              ['name', SwaggerTypes.string()],
+              ['email', SwaggerTypes.email()],
+              ['phone', SwaggerTypes.string()],
+              ['city', SwaggerTypes.string()],
+              ['state', SwaggerTypes.string()],
+              ['country', SwaggerTypes.string()],
+              ['birthDate', SwaggerTypes.dateTime()],
+            ],
+            [],
+            userObject,
+          ),
         ),
         ...defaultResponses,
       },
@@ -98,6 +115,7 @@ export const userPaths = {
       summary: 'Get a User',
       produces: ['application/json'],
       parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      security,
       responses: {
         ...SwaggerResponse.ok(
           'User found',
@@ -124,6 +142,7 @@ export const userPaths = {
           ['birthDate', SwaggerTypes.dateTime()],
         ]),
       },
+      security,
       responses: {
         ...SwaggerResponse.ok(
           'User updated',
@@ -138,6 +157,7 @@ export const userPaths = {
       summary: 'Delete a User by id',
       produces: ['application/json'],
       parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      security,
       responses: {
         ...SwaggerResponse.noContent(),
         ...SwaggerResponse.notFound('User not found'),

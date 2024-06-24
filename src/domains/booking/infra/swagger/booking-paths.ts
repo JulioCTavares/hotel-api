@@ -7,6 +7,7 @@ import {
   defaultFilterParams,
   defaultResponses,
   SwaggerResponse,
+  security,
 } from '@/shared/infra/swagger/helpers'
 import { BookingStatus } from '../../entities'
 
@@ -58,6 +59,7 @@ export const bookingPaths = {
         ]),
         ...defaultFilterParams,
       ],
+      security,
       responses: {
         ...SwaggerResponse.ok(
           'Bookings found',
@@ -85,6 +87,7 @@ export const bookingPaths = {
           ['status', SwaggerTypes.enum(bookingStatus, true)],
         ]),
       },
+      security,
       responses: {
         ...SwaggerResponse.created(
           'Booking created',
@@ -100,6 +103,7 @@ export const bookingPaths = {
       summary: 'Get a Booking',
       produces: ['application/json'],
       parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      security,
       responses: {
         ...SwaggerResponse.ok(
           'Booking found',
@@ -125,6 +129,7 @@ export const bookingPaths = {
           ['status', SwaggerTypes.enum(bookingStatus)],
         ]),
       },
+      security,
       responses: {
         ...SwaggerResponse.ok(
           'Booking updated',
@@ -139,6 +144,7 @@ export const bookingPaths = {
       summary: 'Delete a Booking by id',
       produces: ['application/json'],
       parameters: SwaggerPath.paths([['id', SwaggerTypes.uuid(), true]]),
+      security,
       responses: {
         ...SwaggerResponse.noContent(),
         ...SwaggerResponse.notFound('Booking not found'),
