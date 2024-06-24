@@ -1,35 +1,32 @@
-import { Hotel as HotelModel, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
 
-import { IUpdateHotelRepository } from '@/domains/hotel/usecases/repos';
-import { Hotel } from '@/domains/hotel/entities';
+import { IUpdateHotelRepository } from '@/domains/hotel/usecases/repos'
 
-import { convertNullToUndefined } from '@/shared/helpers';
-import { prismaConnector, PrismaException } from '@/shared/infra/prisma';
+import { PrismaException } from '@/shared/infra/prisma'
+import { PrismaHotelMapper } from '../mapper'
+import { prismaConnector } from '@/main/infra/prisma'
 
-export class PrismaUpdateHotelRepository
-  implements IUpdateHotelRepository {
-  private prismaConnection: PrismaClient;
+export class PrismaUpdateHotelRepository implements IUpdateHotelRepository {
+  private prismaConnection: PrismaClient
 
   constructor() {
-    this.prismaConnection = prismaConnector.connect();
+    this.prismaConnection = prismaConnector.connect()
   }
 
   async update(
     hotelToUpdate: IUpdateHotelRepository.Params,
   ): Promise<IUpdateHotelRepository.Result> {
     try {
-      const { id, ...restOfHotelParams } = hotelToUpdate;
+      const { id, ...restOfHotelParams } = hotelToUpdate
 
-      const hotelDTO = await this.prismaConnection.hotel.update({
+      const hotel = await this.prismaConnection.hotel.update({
         where: { id },
         data: restOfHotelParams,
-      });
+      })
 
-      const hotel = new Hotel(convertNullToUndefined<HotelModel>(hotelDTO));
-
-      return hotel;
+      return PrismaHotelMapper.toDomain(hotel)
     } catch (error) {
-      throw new PrismaException(error);
+      throw new PrismaException(error)
     }
   }
 }

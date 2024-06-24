@@ -12,9 +12,7 @@ export class PrismaFormatter {
       'endDate',
     ]
 
-    const filterNumeric = [
-      'roomNumber', // Adicione aqui outros campos que deveriam ser numéricos
-    ]
+    const filterNumeric = ['roomNumber']
 
     const filterWithouUndefined = filterEntries.filter(
       ([_key, value]) => value !== undefined,
@@ -41,10 +39,6 @@ export class PrismaFormatter {
           return [null, null]
         }
 
-        if (typeof value === 'string' && key !== 'id') {
-          return [key, { contains: value }]
-        }
-
         if (filterdByDate.includes(key)) {
           // @ts-expect-error
           const { initialDate, finalDate } = value
@@ -62,6 +56,10 @@ export class PrismaFormatter {
           }
 
           return [key, { gte: new Date(initialDate), lte: new Date(finalDate) }]
+        }
+
+        if (typeof value === 'string' && key !== 'id') {
+          return [key, { contains: value }]
         }
 
         return [key, value]

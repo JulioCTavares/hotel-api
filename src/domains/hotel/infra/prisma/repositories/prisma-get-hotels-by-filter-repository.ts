@@ -1,53 +1,40 @@
-import { Hotel as HotelModel, PrismaClient } from '@prisma/client';
+import { Hotel as HotelModel, PrismaClient } from '@prisma/client'
 
-import { IGetHotelsByFilterRepository } from '@/domains/hotel/usecases/repos';
-import { Hotel } from '@/domains/hotel/entities';
+import { IGetHotelsByFilterRepository } from '@/domains/hotel/usecases/repos'
+import { Hotel } from '@/domains/hotel/entities'
 
-import { convertNullToUndefined } from '@/shared/helpers';
-
-import {
-  prismaConnector,
-  PrismaFormatter,
-  PrismaException,
-} from '@/shared/infra/prisma';
+import { PrismaFormatter, PrismaException } from '@/shared/infra/prisma'
+import { prismaConnector } from '@/main/infra/prisma'
+import { PrismaHotelMapper } from '../mapper'
 
 export class PrismaGetHotelsByFilterRepository
   implements IGetHotelsByFilterRepository {
-  private prismaConnection: PrismaClient;
+  private prismaConnection: PrismaClient
 
   constructor() {
-    this.prismaConnection = prismaConnector.connect();
+    this.prismaConnection = prismaConnector.connect()
   }
 
   async get(
     filter: IGetHotelsByFilterRepository.Params,
   ): Promise<IGetHotelsByFilterRepository.Result> {
     try {
-      const {
-        orderBy,
-        pagination,
-        filters,
-      } = filter;
+      const { orderBy, pagination, filters } = filter
 
-      const filtersFormated = PrismaFormatter.formatFilter(filters);
+      const filtersFormated = PrismaFormatter.formatFilter(filters)
 
-      const hotelDTOs = await this.prismaConnection.hotel.findMany({
-        where: {
-          ...filtersFormated,
-          enabled: filters.enabled ?? true,
-        },
+      const hotels = await this.prismaConnection.hotel.findMany({
+        where: filtersFormated,
         orderBy: { [orderBy.property]: orderBy.mode },
         take: pagination.take,
         skip: pagination.skip,
-      });
+      })
 
-      const hotels = hotelDTOs.map((hotelDTO) => {
-        return new Hotel(convertNullToUndefined<HotelModel>(hotelDTO));
-      });
-
-      return hotels;
+      return hotels.map((hotel) => {
+        return PrismaHotelMapper.toDomain(hotel)
+      })
     } catch (error) {
-      throw new PrismaException(error);
+      throw new PrismaException(error)
     }
   }
 }

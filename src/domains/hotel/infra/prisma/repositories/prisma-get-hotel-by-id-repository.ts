@@ -1,37 +1,34 @@
-import { Hotel as HotelModel, PrismaClient } from '@prisma/client';
+import { Hotel as HotelModel, PrismaClient } from '@prisma/client'
 
-import { IGetHotelByIdRepository } from '@/domains/hotel/usecases/repos';
-import { Hotel } from '@/domains/hotel/entities';
+import { IGetHotelByIdRepository } from '@/domains/hotel/usecases/repos'
+import { Hotel } from '@/domains/hotel/entities'
 
-import { convertNullToUndefined } from '@/shared/helpers';
-import { prismaConnector, PrismaException } from '@/shared/infra/prisma';
+import { PrismaException } from '@/shared/infra/prisma'
+import { prismaConnector } from '@/main/infra/prisma'
+import { PrismaHotelMapper } from '../mapper'
 
-export class PrismaGetHotelByIdRepository
-  implements IGetHotelByIdRepository
-{
-  private prismaConnection: PrismaClient;
+export class PrismaGetHotelByIdRepository implements IGetHotelByIdRepository {
+  private prismaConnection: PrismaClient
 
   constructor() {
-    this.prismaConnection = prismaConnector.connect();
+    this.prismaConnection = prismaConnector.connect()
   }
 
   async get(
     id: IGetHotelByIdRepository.Params,
   ): Promise<IGetHotelByIdRepository.Result> {
     try {
-      const hotelDTO = await this.prismaConnection.hotel.findFirst({
-        where: { id, enabled: true },
-      });
+      const hotel = await this.prismaConnection.hotel.findFirst({
+        where: { id },
+      })
 
-      if (!hotelDTO) {
-        return null;
+      if (!hotel) {
+        return null
       }
 
-      const hotel = new Hotel(convertNullToUndefined<HotelModel>(hotelDTO));
-
-      return hotel;
+      return PrismaHotelMapper.toDomain(hotel)
     } catch (error) {
-      throw new PrismaException(error);
+      throw new PrismaException(error)
     }
   }
 }

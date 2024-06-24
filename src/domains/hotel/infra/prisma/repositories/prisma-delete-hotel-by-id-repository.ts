@@ -1,16 +1,16 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
 
-import { IDeleteHotelByIdRepository } from '@/domains/hotel/usecases/repos';
+import { IDeleteHotelByIdRepository } from '@/domains/hotel/usecases/repos'
 
-import { prismaConnector, PrismaException } from '@/shared/infra/prisma';
+import { PrismaException } from '@/shared/infra/prisma'
+import { prismaConnector } from '@/main/infra/prisma'
 
 export class PrismaDeleteHotelByIdRepository
-  implements IDeleteHotelByIdRepository
-{
-  private prismaConnection: PrismaClient;
+  implements IDeleteHotelByIdRepository {
+  private prismaConnection: PrismaClient
 
   constructor() {
-    this.prismaConnection = prismaConnector.connect();
+    this.prismaConnection = prismaConnector.connect()
   }
 
   async delete(
@@ -19,9 +19,9 @@ export class PrismaDeleteHotelByIdRepository
     try {
       await this.prismaConnection.hotel.delete({
         where: { id },
-      });
+      })
     } catch (error) {
-      throw new PrismaException(error);
+      throw new PrismaException(error)
     }
   }
 }
