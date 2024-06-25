@@ -9,13 +9,17 @@ import {
   SwaggerResponse,
   security,
 } from '@/shared/infra/swagger/helpers'
+import { UserRoles } from '../../entities'
 
 export const userTag = 'Users'
+
+const userRoles = Object.values(UserRoles)
 
 const userObject = SwaggerTypes.object(true, [
   ['id', SwaggerTypes.uuid(true)],
   ['name', SwaggerTypes.string(true)],
   ['email', SwaggerTypes.email(true)],
+  ['role', SwaggerTypes.enum(userRoles, true)],
   ['phone', SwaggerTypes.string(false)],
   ['city', SwaggerTypes.string(false)],
   ['state', SwaggerTypes.string(false)],
@@ -29,6 +33,7 @@ export const userSchema = SwaggerSchemas.create('User', [
   ['id', SwaggerTypes.uuid(true)],
   ['name', SwaggerTypes.string(true)],
   ['email', SwaggerTypes.email(true)],
+  ['role', SwaggerTypes.enum(userRoles, true)],
   ['phone', SwaggerTypes.string(false)],
   ['city', SwaggerTypes.string(false)],
   ['state', SwaggerTypes.string(false)],
@@ -78,6 +83,7 @@ export const userPaths = {
           ['name', SwaggerTypes.string(true)],
           ['email', SwaggerTypes.email(true)],
           ['password', SwaggerTypes.string(true)],
+          ['role', SwaggerTypes.enum(userRoles, true)],
           ['phone', SwaggerTypes.string()],
           ['city', SwaggerTypes.string()],
           ['state', SwaggerTypes.string()],
@@ -96,6 +102,7 @@ export const userPaths = {
               ['name', SwaggerTypes.string()],
               ['email', SwaggerTypes.email()],
               ['phone', SwaggerTypes.string()],
+              ['role', SwaggerTypes.enum(userRoles)],
               ['city', SwaggerTypes.string()],
               ['state', SwaggerTypes.string()],
               ['country', SwaggerTypes.string()],

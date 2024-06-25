@@ -1,4 +1,4 @@
-import { User } from '@/domains/user/entities'
+import { User, UserRoles } from '@/domains/user/entities'
 import { UserAlreadyExistsException } from '@/domains/user/usecases/exceptions'
 import {
   IGetUserByEmailRepository,
@@ -14,6 +14,7 @@ export interface ICreateUserParams {
   phone?: string
   city?: string
   state?: string
+  role: UserRoles
   country?: string
 }
 

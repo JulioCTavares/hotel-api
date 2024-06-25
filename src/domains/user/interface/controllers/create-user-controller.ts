@@ -10,6 +10,7 @@ import {
 
 import { IHasher, ILoggerLocal, IUuidGenerator } from '@/shared/protocols'
 import { z } from 'zod'
+import { UserRoles } from '../../entities'
 
 export interface CreateUserRequest {
   name: string
@@ -26,6 +27,7 @@ const createUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
+  role: z.enum([UserRoles.ADMIN, UserRoles.USER]),
   birthDate: z.date().optional(),
   phone: z.string().optional(),
   city: z.string().optional(),
@@ -64,19 +66,7 @@ export class CreateUserController {
 
     this.logger.logDebug({ message: 'Params validated' })
 
-    const { name, email, password, birthDate, phone, city, state, country } =
-      validatedRequest
-
-    const userCreated = await this.usecase.execute({
-      name,
-      email,
-      password,
-      birthDate,
-      phone,
-      city,
-      state,
-      country,
-    })
+    const userCreated = await this.usecase.execute(validatedRequest)
 
     this.logger.logDebug({ message: 'User created', data: userCreated })
 

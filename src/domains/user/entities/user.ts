@@ -1,3 +1,8 @@
+export enum UserRoles {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
+
 type UserType = {
   id: string
   name: string
@@ -7,6 +12,7 @@ type UserType = {
   phone?: string
   city?: string
   state?: string
+  role: UserRoles
   country?: string
   createdAt?: Date
   updatedAt?: Date
@@ -20,6 +26,7 @@ export class User {
   birthDate?: Date
   phone?: string
   city?: string
+  role: UserRoles
   state?: string
   country?: string
   createdAt?: Date
@@ -36,6 +43,7 @@ export class User {
       country,
       createdAt,
       phone,
+      role,
       state,
       updatedAt,
     } = user
@@ -49,6 +57,7 @@ export class User {
     this.city = city
     this.state = state
     this.country = country
+    this.role = role
     this.createdAt = createdAt
     this.updatedAt = updatedAt
 

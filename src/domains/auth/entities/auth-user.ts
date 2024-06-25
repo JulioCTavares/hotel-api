@@ -1,3 +1,5 @@
+import { UserRoles } from '@/domains/user/entities'
+
 export type AuthUserType = {
   id: string
   email: string
@@ -6,6 +8,7 @@ export type AuthUserType = {
   phone?: string
   city?: string
   state?: string
+  role: UserRoles
   country?: string
   createdAt?: Date
   updatedAt?: Date
@@ -19,6 +22,7 @@ export class AuthUser {
   phone?: string
   city?: string
   state?: string
+  role: UserRoles
   country?: string
   createdAt?: Date
   updatedAt?: Date
@@ -31,6 +35,7 @@ export class AuthUser {
       birthDate,
       phone,
       city,
+      role,
       country,
       createdAt,
       state,
@@ -43,6 +48,7 @@ export class AuthUser {
     this.birthDate = birthDate
     this.phone = phone
     this.city = city
+    this.role = role
     this.state = state
     this.country = country
     this.createdAt = createdAt

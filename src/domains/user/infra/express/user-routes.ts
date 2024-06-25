@@ -15,12 +15,24 @@ const userRouter = Router()
 userRouter
   .route('/users')
   .post(adaptRoute(makeHttpCreateUserController()))
-  .get(authMiddleware(), adaptRoute(makeHttpGetUsersByFilterController()))
+  .get(
+    authMiddleware(['ADMIN']),
+    adaptRoute(makeHttpGetUsersByFilterController()),
+  )
 
 userRouter
   .route('/users/:id')
-  .get(authMiddleware(), adaptRoute(makeHttpGetUserByIdController()))
-  .patch(authMiddleware(), adaptRoute(makeHttpUpdateUserByIdController()))
-  .delete(authMiddleware(), adaptRoute(makeHttpDeleteUserByIdController()))
+  .get(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpGetUserByIdController()),
+  )
+  .patch(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpUpdateUserByIdController()),
+  )
+  .delete(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpDeleteUserByIdController()),
+  )
 
 export { userRouter }

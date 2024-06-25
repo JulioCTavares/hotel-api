@@ -16,13 +16,25 @@ const hotelRouter = Router()
 
 hotelRouter
   .route('/hotels')
-  .post(authMiddleware(), adaptRoute(makeHttpCreateHotelController()))
-  .get(authMiddleware(), adaptRoute(makeHttpGetHotelsByFilterController()))
+  .post(authMiddleware(['ADMIN']), adaptRoute(makeHttpCreateHotelController()))
+  .get(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpGetHotelsByFilterController()),
+  )
 
 hotelRouter
   .route('/hotels/:id')
-  .get(authMiddleware(), adaptRoute(makeHttpGetHotelByIdController()))
-  .patch(authMiddleware(), adaptRoute(makeHttpUpdateHotelByIdController()))
-  .delete(authMiddleware(), adaptRoute(makeHttpDeleteHotelByIdController()))
+  .get(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpGetHotelByIdController()),
+  )
+  .patch(
+    authMiddleware(['ADMIN']),
+    adaptRoute(makeHttpUpdateHotelByIdController()),
+  )
+  .delete(
+    authMiddleware(['ADMIN']),
+    adaptRoute(makeHttpDeleteHotelByIdController()),
+  )
 
 export { hotelRouter }

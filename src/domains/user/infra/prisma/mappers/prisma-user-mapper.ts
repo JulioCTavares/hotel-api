@@ -1,6 +1,6 @@
 import { User as PrismaUser } from '@prisma/client'
 
-import { User } from '@/domains/user/entities'
+import { User, UserRoles } from '@/domains/user/entities'
 
 export class PrismaUserMapper {
   static toDomain(userDTO: PrismaUser): User {
@@ -9,6 +9,7 @@ export class PrismaUserMapper {
       name: userDTO.name,
       email: userDTO.email,
       password: userDTO.password,
+      role: userDTO.role as UserRoles,
       birthDate: userDTO.birthDate !== null ? userDTO.birthDate : undefined,
       phone: userDTO.phone !== null ? userDTO.phone : undefined,
       city: userDTO.city !== null ? userDTO.city : undefined,

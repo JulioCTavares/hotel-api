@@ -14,13 +14,28 @@ const bookingRouter = Router()
 
 bookingRouter
   .route('/bookings')
-  .post(authMiddleware(), adaptRoute(makeHttpCreateBookingController()))
-  .get(authMiddleware(), adaptRoute(makeHttpGetBookingsByFilterController()))
+  .post(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpCreateBookingController()),
+  )
+  .get(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpGetBookingsByFilterController()),
+  )
 
 bookingRouter
   .route('/bookings/:id')
-  .get(authMiddleware(), adaptRoute(makeHttpGetBookingByIdController()))
-  .patch(authMiddleware(), adaptRoute(makeHttpUpdateBookingByIdController()))
-  .delete(authMiddleware(), adaptRoute(makeHttpDeleteBookingByIdController()))
+  .get(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpGetBookingByIdController()),
+  )
+  .patch(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpUpdateBookingByIdController()),
+  )
+  .delete(
+    authMiddleware(['ADMIN', 'USER']),
+    adaptRoute(makeHttpDeleteBookingByIdController()),
+  )
 
 export { bookingRouter }

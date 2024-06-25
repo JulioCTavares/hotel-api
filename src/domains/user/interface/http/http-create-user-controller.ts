@@ -14,12 +14,14 @@ import {
 } from '@/shared/interface/http/helpers'
 import { CreateUserController } from '@/domains/user/interface/controllers'
 import { ZodError } from 'zod'
+import { UserRoles } from '../../entities'
 
 export interface HttpCreateUserRequest {
   name: string
   email: string
   password: string
   birthDate?: Date
+  role: UserRoles
   phone?: string
   city?: string
   state?: string
