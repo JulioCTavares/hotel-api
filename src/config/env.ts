@@ -13,6 +13,7 @@ const envSchema = z.object({
   DATABASE_TEST_URL: z.string(),
   DATABASE_USERNAME: z.string(),
   DATABASE_PASSWORD: z.string(),
+  DATABASE_TEST_PASSWORD: z.string(),
   DATABASE_PORT: z.coerce.number(),
   JWT_SECRET: z.string(),
   JWT_EXPIRATION: z.string(),
