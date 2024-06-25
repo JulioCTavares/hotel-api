@@ -11,7 +11,7 @@ Este repositório é destinado ao desafio PMWeb.
 
 ## Rodando o projeto
 
-1. Certifique-se de ter docker/docker-compose e npm instalados. 
+1. Certifique-se de ter [docker/docker-compose](https://docs.docker.com/engine/install/) e [npm](https://nodejs.org/en/download/package-manager/current) instalados. 
 
 2. Clone o repositório executando o comando:
 ```bash 
