@@ -18,6 +18,7 @@ export namespace ICreateBookingUsecase {
     endDate: Date
     status: BookingStatus
     userId: string
+    hotelId?: string
   }
 
   export type Response = Booking

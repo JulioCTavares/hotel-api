@@ -1,11 +1,11 @@
 import { DefaultException, ExceptionTypes } from '@/shared/helpers'
 
-export class InvalidCredentialsException extends DefaultException {
+export class AuthUserNotFoundException extends DefaultException {
   constructor() {
     super({
       type: ExceptionTypes.USER,
-      code: 'INVALID_CREDENTIALS',
-      message: 'Email or password is incorrect',
+      code: 'USER_NOT_FOUND',
+      message: 'user not found',
     })
   }
 }

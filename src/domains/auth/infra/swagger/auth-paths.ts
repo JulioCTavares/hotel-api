@@ -45,4 +45,20 @@ export const authPaths = {
       },
     },
   },
+  '/auth/forgot-password': {
+    post: {
+      tags: [authTag],
+      summary: 'Login',
+      produces: ['application/json'],
+      requestBody: {
+        content: SwaggerContents.applicationJson([
+          ['email', SwaggerTypes.email(true)],
+        ]),
+      },
+      responses: {
+        ...SwaggerResponse.ok(),
+        ...defaultResponses,
+      },
+    },
+  },
 }
