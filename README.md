@@ -27,7 +27,7 @@ npm install
   
 5. Para iniciar o servidor de desenvolvimento, execute:
 ```bash
-docker-compose --profile=db-only up --build
+docker-compose --profile=db-only up -d
 npm run dev
 ```
 

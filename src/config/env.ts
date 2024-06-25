@@ -18,8 +18,8 @@ const envSchema = z.object({
   JWT_SECRET: z.string(),
   JWT_EXPIRATION: z.string(),
   REFRESH_TOKEN_EXPIRATION: z.string(),
-  SENDGRID_API_KEY: z.string(),
-  SENDGRID_EMAIl: z.string().email(),
+  SENDGRID_API_KEY: z.string().optional(),
+  SENDGRID_EMAIl: z.string().email().optional(),
 })
 
 const _env = envSchema.safeParse(process.env)
