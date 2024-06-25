@@ -2,17 +2,15 @@ module.exports = {
   roots: ['<rootDir>/__tests__'],
   clearMocks: true,
   collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/main/**'],
-  testMatch: ['**/**.spec.ts', '**/**.test.ts'],
+  testMatch: ['**/*.spec.ts', '**/*.test.ts'],
   globals: {
-    'ts-jest': {
-      compiler: 'ttypescript',
-    },
+    'ts-jest': {},
   },
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
   testEnvironment: 'node',
   transform: {
-    '.+\\.ts$': 'ts-jest',
+    '^.+\\.ts$': 'ts-jest',
   },
   moduleFileExtensions: ['js', 'json', 'ts'],
   moduleNameMapper: {
