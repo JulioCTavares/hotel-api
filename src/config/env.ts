@@ -7,6 +7,7 @@ const envSchema = z.object({
   FRONT_URL: z.string().optional(),
   DEPLOY_URL: z.string().optional(),
   DATABASE_URL: z.string(),
+  DATABASE_TEST_URL: z.string(),
   DATABASE_USERNAME: z.string(),
   DATABASE_PASSWORD: z.string(),
   DATABASE_PORT: z.coerce.number(),

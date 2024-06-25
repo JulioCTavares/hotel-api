@@ -15,6 +15,21 @@ services:
     volumes:
       - sqlserver-data:/var/opt/mssql
 
+  hotel_test_db:
+    profiles:
+      - test
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    hostname: hotel-test-db
+    restart: unless-stopped
+    ports:
+      - '${TEST_DATABASE_PORT:?TEST_DATABASE_PORT env var is missing on .env file}:${TEST_DATABASE_PORT}'
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${TEST_DATABASE_PASSWORD:?TEST_DATABASE_PASSWORD env var is missing on .env file}
+      MSSQL_PID: "Developer"
+    volumes:
+      - sqlserver-test-data:/var/opt/mssql
+
   hotel_api:
     profiles:
       - local
@@ -34,4 +49,6 @@ services:
 
 volumes:
   sqlserver-data:
+    driver: local
+  sqlserver-test-data:
     driver: local

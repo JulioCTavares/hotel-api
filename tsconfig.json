@@ -18,16 +18,26 @@
     "noImplicitReturns": true,
     "rootDirs": [
       "src",
+      "__tests__"
     ],
     "baseUrl": "src",
     "paths": {
+      "@/tests/*": [
+        "../__tests__/*"
+      ],
       "@/*": [
         "*"
       ]
     },
+    "plugins": [
+      {
+        "name": "ts-auto-mock/ts-jest"
+      }
+    ]
   },
   "include": [
     "src",
+    "__tests__"
   ],
   "exclude": []
 }
